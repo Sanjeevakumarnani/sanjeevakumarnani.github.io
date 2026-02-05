@@ -5,7 +5,7 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/', // Changed to / for custom domain ssksanjeevakumar.com
+  base: '/', // Changed to / for custom domain ssksanjeevakumar.in
   plugins: [inspectAttr(), react()],
   resolve: {
     alias: {
