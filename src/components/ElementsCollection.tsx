@@ -101,13 +101,13 @@ html, body, canvas { width: 100%; height: 100%; margin: 0; overflow: hidden; bac
 }
 
 export function ElementsCollection({
-  speed = GENERATIVE_TREE_DEFAULTS.speed,
-  size = GENERATIVE_TREE_DEFAULTS.size,
-  particleAmount = GENERATIVE_TREE_DEFAULTS.particleAmount,
-  opacity = GENERATIVE_TREE_DEFAULTS.opacity,
-  hue = GENERATIVE_TREE_DEFAULTS.hue,
-  saturation = GENERATIVE_TREE_DEFAULTS.saturation,
-  brightness = GENERATIVE_TREE_DEFAULTS.brightness,
+  speed = ELEMENTS_COLLECTION_DEFAULTS.speed,
+  size = ELEMENTS_COLLECTION_DEFAULTS.size,
+  particleAmount = ELEMENTS_COLLECTION_DEFAULTS.particleAmount,
+  opacity = ELEMENTS_COLLECTION_DEFAULTS.opacity,
+  hue = ELEMENTS_COLLECTION_DEFAULTS.hue,
+  saturation = ELEMENTS_COLLECTION_DEFAULTS.saturation,
+  brightness = ELEMENTS_COLLECTION_DEFAULTS.brightness,
   className = "",
   style,
 }: ElementsCollectionProps) {
@@ -172,3 +172,5 @@ export function ElementsCollection({
     </div>
   );
 }
+
+export default ElementsCollection;
