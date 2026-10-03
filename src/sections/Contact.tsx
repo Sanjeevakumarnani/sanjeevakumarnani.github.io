@@ -30,11 +30,12 @@ export default function Contact() {
         headers: { Accept: 'application/json' },
         body: data,
       });
-      if (res.ok) {
-        e.currentTarget.reset();
-        setSent(true);
-        window.setTimeout(() => setSent(false), 4500);
-      }
+      if (!res.ok) throw new Error('Message submission failed');
+      e.currentTarget.reset();
+      setSent(true);
+      window.setTimeout(() => setSent(false), 4500);
+    } catch {
+      setSent(false);
     } finally {
       setBusy(false);
     }
