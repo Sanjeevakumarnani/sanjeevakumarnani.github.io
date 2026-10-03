@@ -16,7 +16,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--bg); scroll-padding-top: 88px; }
+html { scroll-behavior: auto; background: var(--bg); scroll-padding-top: 88px; overscroll-behavior-y: none; }
 body {
   margin: 0;
   background: var(--bg);
