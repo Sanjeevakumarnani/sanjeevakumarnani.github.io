@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import generativeTreeSource from "./sources/generative-tree.html?raw";
+import generativeTreeSource from "./generative-tree.html?raw";
 
 export type ElementsCollectionProps = {
   speed?: number;
