@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Code2, Cloud, ShieldCheck, Workflow } from 'lucide-react';
+import { Code2, Cloud, ShieldCheck, Workflow, type LucideIcon } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const cards = [
+type AboutCard = { n: string; Icon: LucideIcon; title: string; text: string };
+
+const cards: AboutCard[] = [
   { n: '01', Icon: Code2, title: 'Full-stack systems', text: 'Python, Flask, REST APIs, MySQL, Node.js and modern web interfaces.' },
   { n: '02', Icon: Cloud, title: 'Cloud infrastructure', text: 'AWS EC2/RDS and Firebase Cloud Messaging with production-oriented workflows.' },
   { n: '03', Icon: ShieldCheck, title: 'Security layer', text: 'Phishing detection, Kali Linux and ethical-hacking fundamentals.' },
