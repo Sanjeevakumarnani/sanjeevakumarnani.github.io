@@ -4,8 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
 
 import Navigation from './components/Navigation';
-import FloatingParticles from './components/FloatingParticles';
 import CursorGlow from './components/CursorGlow';
+import ElementsCollection from './components/ElementsCollection';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -18,24 +18,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   useEffect(() => {
-    // Refresh ScrollTrigger on load
     ScrollTrigger.refresh();
-    
-    return () => {
-      ScrollTrigger.getAll().forEach(st => st.kill());
-    };
+    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a192f] relative overflow-x-hidden">
-      {/* Background Effects */}
-      <FloatingParticles />
+    <div className="portfolio-shell">
+      <div className="tree-background" aria-hidden="true">
+        <ElementsCollection
+          variant="generative-tree"
+          speed={1}
+          size={0.65}
+          particleAmount={0}
+          hue={0}
+          saturation={1}
+          brightness={1}
+          opacity={0.77}
+        />
+      </div>
+      <div className="ambient-grid" aria-hidden="true" />
       <CursorGlow />
-      
-      {/* Navigation */}
       <Navigation />
-
-      {/* Main Content */}
       <main className="relative z-10">
         <Hero />
         <About />
@@ -44,8 +47,6 @@ function App() {
         <Experience />
         <Contact />
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );
