@@ -58,7 +58,7 @@ export default function Posts() {
               <span>LINKEDIN</span>
             </div>
             <span className="post-type">{eyebrow}</span>
-            <h3>{title}</h3>
+            <h3 className="px-5 mt-2 text-2xl leading-none tracking-tight">{title}</h3>
             {highlight && <div className="post-highlight">{highlight}</div>}
             <p>{description}</p>
             <div className="post-tags">{tags.map(tag=><span key={tag}>{tag}</span>)}</div>
