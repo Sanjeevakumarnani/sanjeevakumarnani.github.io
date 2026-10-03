@@ -6,10 +6,10 @@ import { Code2, Cloud, ShieldCheck, Workflow } from 'lucide-react';
 gsap.registerPlugin(ScrollTrigger);
 
 const cards = [
-  ['01', Code2, 'Full-stack systems', 'Python, Flask, REST APIs, MySQL, Node.js and modern web interfaces.'],
-  ['02', Cloud, 'Cloud infrastructure', 'AWS EC2/RDS and Firebase Cloud Messaging with production-oriented workflows.'],
-  ['03', ShieldCheck, 'Security layer', 'Phishing detection, Kali Linux and ethical-hacking fundamentals.'],
-  ['04', Workflow, 'Cross-domain builder', 'Mobile, web, cloud and security work connected into complete products.'],
+  { n: '01', Icon: Code2, title: 'Full-stack systems', text: 'Python, Flask, REST APIs, MySQL, Node.js and modern web interfaces.' },
+  { n: '02', Icon: Cloud, title: 'Cloud infrastructure', text: 'AWS EC2/RDS and Firebase Cloud Messaging with production-oriented workflows.' },
+  { n: '03', Icon: ShieldCheck, title: 'Security layer', text: 'Phishing detection, Kali Linux and ethical-hacking fundamentals.' },
+  { n: '04', Icon: Workflow, title: 'Cross-domain builder', text: 'Mobile, web, cloud and security work connected into complete products.' },
 ];
 
 export default function About() {
@@ -50,7 +50,7 @@ export default function About() {
           </p>
         </div>
         <div className="about-cards">
-          {cards.map(([n, Icon, title, text]) => (
+          {cards.map(({ n, Icon, title, text }) => (
             <article className="about-item glass-panel" key={n}>
               <div className="card-index">{n}</div>
               <Icon size={22} />
