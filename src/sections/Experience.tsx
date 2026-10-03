@@ -1,221 +1,54 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ExternalLink, Award } from 'lucide-react';
+import { BriefcaseBusiness, GraduationCap, Award } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const experiences = [
-  {
-    id: 'varun',
-    company: 'Varun Motors Pvt Ltd',
-    title: 'Executive EDP',
-    period: 'Jan 2022 - July 2023',
-    duration: '1 year 7 months',
-    location: 'Hyderabad, Telangana',
-    description: [
-      'Handled communication and documentation for the executive team',
-      'Managed computer operations and reporting systems',
-      'Coordinated with cross-functional teams for smooth operations',
-      'Developed strong organizational and technical skills'
-    ],
-    skills: ['Communication', 'Documentation', 'Computer Operations', 'Team Coordination']
-  },
-  {
-    id: 'diploma',
-    company: 'Brilliant Grammar School',
-    title: 'Diploma in Computer Science & Engineering',
-    period: 'July 2023 - May 2026',
-    duration: 'Ongoing',
-    location: 'Hyderabad, Telangana',
-    description: [
-      'Currently pursuing diploma in CSE with focus on cybersecurity',
-      'Learning programming fundamentals and software development',
-      'Working on practical projects and security-focused applications',
-      'Maintaining strong academic performance'
-    ],
-    skills: ['Programming', 'Cybersecurity', 'Web Development', 'Database Management']
-  },
-  {
-    id: 'iti',
-    company: 'Industrial Training Institute',
-    title: 'ITI - Computer Operator & Programming Assistant (COPA)',
-    period: 'Dec 2020 - July 2021',
-    duration: '8 months',
-    location: 'Kalwakurthy',
-    description: [
-      'Learned computer operations and programming fundamentals',
-      'Gained expertise in office automation tools',
-      'Developed practical skills in software applications',
-      'Completed certification with excellent grades'
-    ],
-    skills: ['Computer Operations', 'Programming Basics', 'Office Automation']
-  }
-];
-
-const achievements = [
-  {
-    title: 'Hideathon 2025 Finalist',
-    description: 'LinkShield Project - Top 10 out of 4000+ ideas',
-    event: 'IDEATHON - Cybersecurity Tool for Detecting Phishing Attacks'
-  }
+const timeline = [
+  { date: 'DEC 2025 — JUN 2026', icon: BriefcaseBusiness, title: 'Web Development Intern / Full Stack Engineer', org: 'SocioSports (ViranAI Solutions Pvt. Ltd.)', place: 'Hyderabad', text: 'Contributed to the official SocioSports website, built responsive web pages, worked with Python Flask, REST APIs and MySQL, supported sports-technology features, and participated in debugging, version control and production workflows.' },
+  { date: 'JAN 2022 — JUL 2023', icon: BriefcaseBusiness, title: 'Executive — EDP', org: 'Varun Motors Pvt Ltd', place: 'Hyderabad', text: 'Managed dealership operations, documentation and reporting, coordinated cross-functional teams, and built practical foundations in computer operations, data entry and technical documentation.' },
+  { date: 'JUN 2026 — JUN 2029', icon: GraduationCap, title: 'Bachelor of Technology — Computer Science', org: 'Geethanjali College of Engineering and Technology', place: 'Hyderabad', text: 'Current B.Tech pathway after completing the Diploma in Computer Science and Engineering.' },
+  { date: 'JUL 2023 — MAY 2026', icon: GraduationCap, title: 'Diploma — Computer Science & Engineering', org: "Brilliant Grammar School Educational Society's Group of Institutions", place: 'Hyderabad', text: 'Diploma-level computer science engineering education with practical development work.' },
+  { date: 'DEC 2020 — JUL 2021', icon: GraduationCap, title: 'ITI — COPA', org: 'Industrial Training Institute, Kalwakurthy', place: 'Kalwakurthy', text: 'Computer Operator and Programming Assistant training.' },
+  { date: 'JUL 2019 — JUL 2020', icon: GraduationCap, title: 'Secondary School Certificate', org: "ZPHS Boy's High School Kalwakurthy", place: 'Kalwakurthy', text: 'Secondary School Certificate, General Studies.' },
 ];
 
 export default function Experience() {
-  const [activeTab, setActiveTab] = useState('varun');
-  const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const achievementsRef = useRef<HTMLDivElement>(null);
-
-  const activeExperience = experiences.find(exp => exp.id === activeTab);
-
+  const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Title animation
-      gsap.fromTo(titleRef.current,
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-      // Content animation
-      gsap.fromTo(contentRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: contentRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-      // Achievements animation
-      gsap.fromTo(achievementsRef.current,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: achievementsRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-    }, sectionRef);
-
+      gsap.fromTo('.timeline-row', { opacity: 0, x: -35 }, {
+        opacity: 1, x: 0, duration: .6, stagger: .1, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
+      });
+    }, ref);
     return () => ctx.revert();
   }, []);
 
-  // Animate content change
-  useEffect(() => {
-    const content = contentRef.current?.querySelector('.tab-content');
-    if (content) {
-      gsap.fromTo(content,
-        { opacity: 0, x: 10 },
-        { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out' }
-      );
-    }
-  }, [activeTab]);
-
   return (
-    <section ref={sectionRef} id="experience" className="section">
-      {/* Section Title */}
-      <div ref={titleRef} className="section-title opacity-0">
-        <span className="section-number">04.</span>
-        Where I've Worked
+    <section ref={ref} id="experience" className="section section-depth">
+      <div className="section-heading">
+        <span>04 / TIMELINE</span>
+        <h2>Experience & education.</h2>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Tabs */}
-        <div className="lg:col-span-1">
-          <div className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0">
-            {experiences.map((exp) => (
-              <button
-                key={exp.id}
-                onClick={() => setActiveTab(exp.id)}
-                className={`tab-btn whitespace-nowrap ${activeTab === exp.id ? 'active' : ''}`}
-              >
-                {exp.company}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div ref={contentRef} className="lg:col-span-2 opacity-0">
-          {activeExperience && (
-            <div className="tab-content">
-              <h3 className="text-2xl font-semibold text-[#e6f1ff] mb-1">
-                {activeExperience.title}
-                <span className="text-accent"> @ </span>
-                <a 
-                  href="#" 
-                  className="text-accent hover:underline inline-flex items-center gap-1"
-                >
-                  {activeExperience.company}
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              </h3>
-              
-              <p className="font-mono text-sm text-[#8892b0] mb-4">
-                {activeExperience.period} · {activeExperience.duration}
-              </p>
-
-              <ul className="space-y-3 mb-6">
-                {activeExperience.description.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-[#8892b0]">
-                    <span className="text-accent mt-1.5">▹</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex flex-wrap gap-2">
-                {activeExperience.skills.map((skill, idx) => (
-                  <span key={idx} className="tag">{skill}</span>
-                ))}
-              </div>
+      <div className="timeline">
+        {timeline.map(({ date, icon: Icon, title, org, place, text }) => (
+          <article className="timeline-row" key={date + org}>
+            <div className="timeline-node"><Icon size={17} /></div>
+            <div className="timeline-card glass-panel">
+              <div className="timeline-date">{date}</div>
+              <h3>{title}</h3>
+              <h4>{org}</h4>
+              <span className="timeline-place">{place}</span>
+              <p>{text}</p>
             </div>
-          )}
-        </div>
+          </article>
+        ))}
       </div>
-
-      {/* Achievements */}
-      <div ref={achievementsRef} className="mt-16 opacity-0">
-        <h3 className="text-[#e6f1ff] font-medium mb-6 flex items-center gap-2">
-          <Award className="w-5 h-5 text-accent" />
-          Achievements
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {achievements.map((achievement, index) => (
-            <div 
-              key={index}
-              className="card border-l-4 border-l-accent"
-            >
-              <div className="text-xs font-mono text-accent mb-2">{achievement.event}</div>
-              <h4 className="text-lg font-semibold text-[#e6f1ff] mb-1">{achievement.title}</h4>
-              <p className="text-sm text-[#8892b0]">{achievement.description}</p>
-            </div>
-          ))}
-        </div>
+      <div className="achievement-strip glass-panel">
+        <Award size={21} />
+        <div><strong>Hideathon 2025 — LinkShield Project</strong><span>Top 10 out of 4000+ ideas, as documented in the LinkedIn profile.</span></div>
       </div>
     </section>
   );
