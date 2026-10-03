@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import generativeTreeSource from "./generative-tree.html?raw";
 
 export type ElementsCollectionProps = {
+  variant?: string;
   speed?: number;
   size?: number;
   particleAmount?: number;
