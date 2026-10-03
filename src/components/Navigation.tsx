@@ -8,7 +8,8 @@ const navLinks = [
   { label: 'Skills', href: '#skills', number: '02' },
   { label: 'Work', href: '#projects', number: '03' },
   { label: 'Experience', href: '#experience', number: '04' },
-  { label: 'Contact', href: '#contact', number: '05' },
+  { label: 'LinkedIn', href: '#posts', number: '05' },
+  { label: 'Contact', href: '#contact', number: '06' },
 ];
 
 export default function Navigation() {
