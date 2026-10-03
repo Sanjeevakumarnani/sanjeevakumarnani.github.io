@@ -8,43 +8,22 @@ export default function CursorGlow() {
   useEffect(() => {
     const glow = glowRef.current;
     const cursor = cursorRef.current;
-    if (!glow || !cursor) return;
+    if (!glow || !cursor || window.matchMedia('(pointer: coarse)').matches) return;
 
-    // Check if touch device
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
-    if (isTouchDevice) return;
+    const moveCursor = gsap.quickTo(cursor, 'x', { duration: 0.12, ease: 'power2.out' });
+    const moveCursorY = gsap.quickTo(cursor, 'y', { duration: 0.12, ease: 'power2.out' });
+    const moveGlow = gsap.quickTo(glow, 'x', { duration: 0.42, ease: 'power3.out' });
+    const moveGlowY = gsap.quickTo(glow, 'y', { duration: 0.42, ease: 'power3.out' });
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Fast, responsive cursor
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.08,
-        ease: 'power1.out',
-      });
-
-      // Slower, smoother glow
-      gsap.to(glow, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.4,
-        ease: 'power2.out',
-      });
+      moveCursor(e.clientX);
+      moveCursorY(e.clientY);
+      moveGlow(e.clientX);
+      moveGlowY(e.clientY);
     };
 
-    const handleMouseEnter = () => {
-      gsap.to([glow, cursor], {
-        opacity: 1,
-        duration: 0.3,
-      });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to([glow, cursor], {
-        opacity: 0,
-        duration: 0.3,
-      });
-    };
+    const handleMouseEnter = () => gsap.to([glow, cursor], { opacity: 1, duration: 0.25, overwrite: true });
+    const handleMouseLeave = () => gsap.to([glow, cursor], { opacity: 0, duration: 0.25, overwrite: true });
 
     document.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseenter', handleMouseEnter);
@@ -54,17 +33,17 @@ export default function CursorGlow() {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      moveCursor.tween.kill();
+      moveCursorY.tween.kill();
+      moveGlow.tween.kill();
+      moveGlowY.tween.kill();
     };
   }, []);
 
-  // Don't render on touch devices
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-    return null;
-  }
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
 
   return (
     <>
-      {/* Large glow */}
       <div
         ref={glowRef}
         className="fixed pointer-events-none z-[9998] opacity-0"
@@ -76,8 +55,6 @@ export default function CursorGlow() {
           filter: 'blur(40px)',
         }}
       />
-      
-      {/* Small cursor dot */}
       <div
         ref={cursorRef}
         className="fixed pointer-events-none z-[9999] opacity-0"
