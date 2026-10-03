@@ -18,12 +18,21 @@ export default function Navigation() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
+    let frame = 0;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 40);
+        frame = 0;
+      });
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -49,7 +58,7 @@ export default function Navigation() {
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
           ${isScrolled 
-            ? 'bg-[#0a192f]/90 backdrop-blur-md shadow-lg' 
+            ? 'bg-[#080808]/78 backdrop-blur-xl border-b border-white/10 shadow-2xl' 
             : 'bg-transparent'
           }
         `}
