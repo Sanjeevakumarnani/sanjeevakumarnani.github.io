@@ -16,13 +16,26 @@ export default function Hero() {
 
       const visual = visualRef.current;
       if (!visual || window.matchMedia('(pointer: coarse)').matches) return;
+      const rotateY = gsap.quickTo(visual, 'rotateY', { duration: 0.7, ease: 'power3.out' });
+      const rotateX = gsap.quickTo(visual, 'rotateX', { duration: 0.7, ease: 'power3.out' });
+      const moveX = gsap.quickTo(visual, 'x', { duration: 0.7, ease: 'power3.out' });
+      const moveY = gsap.quickTo(visual, 'y', { duration: 0.7, ease: 'power3.out' });
       const move = (e: MouseEvent) => {
         const x = (e.clientX / window.innerWidth - 0.5) * 2;
         const y = (e.clientY / window.innerHeight - 0.5) * 2;
-        gsap.to(visual, { rotateY: x * 8, rotateX: -y * 8, x: x * 8, y: y * 6, duration: 0.8, ease: 'power3.out' });
+        rotateY(x * 8);
+        rotateX(-y * 8);
+        moveX(x * 8);
+        moveY(y * 6);
       };
       window.addEventListener('mousemove', move, { passive: true });
-      return () => window.removeEventListener('mousemove', move);
+      return () => {
+        window.removeEventListener('mousemove', move);
+        rotateY.tween.kill();
+        rotateX.tween.kill();
+        moveX.tween.kill();
+        moveY.tween.kill();
+      };
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -78,7 +91,7 @@ export default function Hero() {
             <div className="portrait-backplate" />
             <div className="portrait-glow" />
             <div className="portrait-frame">
-              <img src="/images/portrait-normal.jpg" alt="SUGURU SANJEEVA KUMAR" />
+              <img src="/images/portrait-normal.jpg" alt="SUGURU SANJEEVA KUMAR" width="410" height="540" fetchPriority="high" decoding="async" />
               <div className="portrait-scan" />
               <div className="portrait-corner top-left" />
               <div className="portrait-corner top-right" />
