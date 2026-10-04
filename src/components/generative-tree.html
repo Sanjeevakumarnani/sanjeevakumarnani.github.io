@@ -195,8 +195,27 @@
       tipDots: [],
     });
 
-    treeState = 'growing';
-    holdTimer = fadeTimer = waitTimer = 0;
+    // Build the complete tree immediately. The background is decorative, so it
+    // should never consume animation frames while the user is scrolling.
+    allBranches[0].growthProgress = 1;
+    const buildQueue = [allBranches[0]];
+    for (let qi = 0; qi < buildQueue.length; qi++) {
+      const parent = buildQueue[qi];
+      if (parent.depth < MAX_DEPTH && !parent.spawned) {
+        parent.spawned = true;
+        spawnChildren(parent);
+        for (const child of parent.children) {
+          child.growthProgress = 1;
+          child.spawned = false;
+          buildQueue.push(child);
+        }
+      }
+    }
+
+    treeState = 'holding';
+    holdTimer = HOLD_DURATION;
+    fadeTimer = fadeTimer = 0;
+    waitTimer = 0;
     treeAlpha = 1;
     initParticles();
   }
@@ -499,51 +518,10 @@
 
   // --- State machine ---
   function frame(time) {
-    // Decay shake
-    if (shakeAmount > 0.01) shakeAmount *= 0.95;
-    else shakeAmount = 0;
-
-    switch (treeState) {
-      case 'growing': {
-        const done = updateBranches(time);
-        drawScene(time);
-        if (done) {
-          treeState = 'holding';
-          holdTimer = 0;
-        }
-        break;
-      }
-      case 'holding': {
-        drawScene(time);
-        holdTimer++;
-        if (holdTimer >= HOLD_DURATION) {
-          treeState = 'fading';
-          fadeTimer = 0;
-        }
-        break;
-      }
-      case 'fading': {
-        fadeTimer++;
-        treeAlpha = Math.max(0, 1 - fadeTimer / FADE_DURATION);
-        drawScene(time);
-        if (fadeTimer >= FADE_DURATION) {
-          treeState = 'waiting';
-          waitTimer = 0;
-        }
-        break;
-      }
-      case 'waiting': {
-        ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#0a0a0a';
-        ctx.fillRect(0, 0, W, H);
-        waitTimer++;
-        if (waitTimer >= WAIT_DURATION) {
-          createTree();
-        }
-        break;
-      }
-    }
-    if (running) requestAnimationFrame(frame);
+    // Kept only for compatibility with the existing visibility hooks.
+    // The tree is rendered once at startup and never animated.
+    drawScene(0);
+    running = false;
   }
 
   // --- Visibility pause ---
