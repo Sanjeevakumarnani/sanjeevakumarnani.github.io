@@ -5,7 +5,6 @@ import './App.css';
 
 import Navigation from './components/Navigation';
 import CursorGlow from './components/CursorGlow';
-import SmoothScroll from './components/SmoothScroll';
 import ElementsCollection from './components/ElementsCollection';
 import Hero from './sections/Hero';
 import About from './sections/About';
@@ -39,7 +38,6 @@ function App() {
         />
       </div>
       <div className="ambient-grid" aria-hidden="true" />
-      <SmoothScroll />
       <CursorGlow />
       <Navigation />
       <main className="relative z-10">
