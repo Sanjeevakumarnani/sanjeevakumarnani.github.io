@@ -559,7 +559,8 @@
   canvas.addEventListener('touchend', function() { mouseActive = false; windForce = 0; });
 
   createTree();
-  requestAnimationFrame(frame);
+  drawScene(0);
+  running = false;
 
   window.addEventListener('message', function(e) {
     if (e.data && e.data.type === 'param') {
