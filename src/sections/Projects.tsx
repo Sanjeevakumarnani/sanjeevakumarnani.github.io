@@ -1,9 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Github, ShieldCheck, Radio, Bot, Gamepad2 } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   { title: 'BRIG RADIO', type: 'FULL-STACK CAMPUS PLATFORM', icon: Radio, description: 'A campus platform combining live streaming and push notifications, developed around a full-stack application workflow.', tags: ['Flask', 'MySQL', 'SQLAlchemy', 'Kotlin', 'Jetpack Compose'] },
@@ -13,19 +9,8 @@ const projects = [
 ];
 
 export default function Projects() {
-  const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.project-3d-card', { opacity: 0, y: 55, rotateX: 8 }, {
-        opacity: 1, y: 0, rotateX: 0, duration: .7, stagger: .12, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 72%' }
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={ref} id="projects" className="section section-depth">
+    <section id="projects" className="section section-depth">
       <div className="section-heading">
         <span>03 / SELECTED WORK</span>
         <h2>Systems I have built.</h2>
