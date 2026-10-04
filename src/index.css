@@ -130,8 +130,8 @@ a { color: inherit; text-decoration: none; }
 .skill-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:17px; }
 .skill-tags span { padding:6px 9px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.025); color:#aaa; font:10px 'DM Mono',monospace; }
 
-.projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; perspective:1300px; }
-.project-3d-card { padding:28px; min-height:320px; position:relative; overflow:hidden; transition:transform .4s ease, border-color .4s ease; transform-style:preserve-3d; }
+.projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.project-3d-card { padding:28px; min-height:320px; position:relative; overflow:hidden; transition:transform .25s ease, border-color .25s ease; transform-style:flat; backdrop-filter:none; -webkit-backdrop-filter:none; }
 .project-3d-card::before { content:''; position:absolute; width:220px; height:220px; right:-100px; top:-100px; border-radius:50%; background:radial-gradient(circle, rgba(213,173,105,.18), transparent 65%); }
 .project-3d-card:hover { transform:translateY(-10px) rotateX(2deg) rotateY(-2deg); border-color:rgba(213,173,105,.35); }
 .featured-project { grid-column:span 2; min-height:360px; background:linear-gradient(145deg, rgba(213,173,105,.09), rgba(255,255,255,.02)); }
