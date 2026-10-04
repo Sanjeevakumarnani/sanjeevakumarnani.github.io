@@ -148,7 +148,7 @@ export function ElementsCollection({
   return (
     <div
       className={`threeui-background generative-tree${className ? ` ${className}` : ""}`}
-      style={{ background: "#0a0a0a", pointerEvents: "auto", ...style }}
+      style={{ background: "#0a0a0a", pointerEvents: "none", ...style }}
     >
       <iframe
         ref={iframeRef}
@@ -166,6 +166,7 @@ export function ElementsCollection({
           height: "100%",
           border: 0,
           background: "#0a0a0a",
+          pointerEvents: "none",
           opacity: clamp(opacity, 0.05, 1),
           filter: `hue-rotate(${clamp(hue, -180, 180)}deg) saturate(${clamp(saturation, 0, 2)}) brightness(${clamp(brightness, 0.35, 1.8)})`,
         }}
