@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ArrowDown, ArrowRight, Github, Linkedin, MapPin, Sparkles } from 'lucide-react';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
@@ -74,7 +76,24 @@ export default function Hero() {
             <div className="portrait-depth depth-a" />
             <div className="portrait-depth depth-b" />
             <div className="portrait-frame">
+              {!videoFailed && (
+                <video
+                  className={'portrait-video' + (videoReady ? ' is-ready' : '')}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster="/images/portrait-normal.jpg"
+                  aria-label="Cinematic full-body portrait video"
+                  onCanPlay={() => setVideoReady(true)}
+                  onError={() => setVideoFailed(true)}
+                >
+                  <source src="/videos/hero-walk-portfolio-portrait.mp4" type="video/mp4" />
+                </video>
+              )}
               <img
+                className={'portrait-image' + (videoReady && !videoFailed ? ' is-video-ready' : '')}
                 src="/images/portrait-normal.jpg"
                 alt="Portrait of Suguru Sanjeeva Kumar"
                 width="410"

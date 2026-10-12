@@ -35,11 +35,13 @@ Validate a production build:
 - Generated resume content: src/components/ResumeTemplate.tsx
 - Global design tokens and responsive styling: src/index.css
 
-## Hero portrait and optional walking video
+## Hero video
 
-The verified current hero image is public/images/portrait-normal.jpg. The application uses it as the hero visual and reduced-motion fallback. No walking video was present in the repository when this version was built.
+The current hero video was prepared from the supplied 10-second 1280×720 clip. A portrait crop keeps the full body visible and is encoded without audio to reduce payload size. Add the supplied file at:
 
-When a full-body walking video is available, add it under public/videos/hero-walk.mp4 and update the media element in src/sections/Hero.tsx to use that path with playsInline, muted autoplay, a poster pointing to /images/portrait-normal.jpg, and a graceful image fallback. Keep the video unmirrored and preserve its intrinsic aspect ratio. The existing image-based entrance remains the reliable fallback.
+    public/videos/hero-walk-portfolio-portrait.mp4
+
+The hero checks whether the video can play. Until that file is present or if playback fails, the existing portrait image remains visible. The video uses muted autoplay, playsInline, a poster image and a graceful image fallback. The clip itself has a white studio background and subtle movement; it does not contain a full left-edge-to-right-edge walk. The GSAP entrance animates the hero visual into place without mirroring the footage.
 
 ## Deployment
 
