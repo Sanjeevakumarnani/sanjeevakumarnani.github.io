@@ -27,41 +27,45 @@ const posts: Post[] = [
 export default function Posts() {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.post-card', { opacity:0, y:24 }, { opacity:1, y:0, duration:.5, stagger:.055, ease:'power3.out', scrollTrigger:{trigger:ref.current,start:'top 80%'} });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const context = gsap.context(() => {
+      gsap.fromTo('.post-card', { opacity: 0, y: 20 }, {
+        opacity: 1, y: 0, duration: 0.45, stagger: 0.05, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 80%' },
+      });
     }, ref);
-    return () => ctx.revert();
+    return () => context.revert();
   }, []);
 
   return (
     <section ref={ref} id="posts" className="section section-depth">
       <div className="section-heading">
-        <span>05 / LINKEDIN</span>
+        <span>05 / FIELD NOTES</span>
         <h2>Builds. Events. Milestones.</h2>
       </div>
 
       <div className="linkedin-head glass-panel">
         <div>
-          <span className="linkedin-live"><i /> LINKEDIN ACTIVITY</span>
-          <strong>Selected posts from my public activity.</strong>
+          <span className="linkedin-live"><i /> PUBLIC ACTIVITY</span>
+          <strong>Selected projects, competitions and learning milestones.</strong>
         </div>
-        <a href="https://www.linkedin.com/in/ssksanjeevakumar" target="_blank" rel="noreferrer">Open profile <ArrowUpRight size={16}/></a>
+        <a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer">Open LinkedIn <ArrowUpRight size={16}/></a>
       </div>
 
       <div className="posts-grid">
-        {posts.map(({date,title,eyebrow,icon:Icon,description,highlight,tags},index) => (
-          <article className={`post-card glass-panel ${index===0 ? 'post-featured' : ''}`} key={title}>
-            <div className="post-top"><span>{String(index+1).padStart(2,'0')}</span><span>{date}</span></div>
-            <div className="post-visual">
+        {posts.map(({ date, title, eyebrow, icon: Icon, description, highlight, tags }, index) => (
+          <article className={'post-card glass-panel' + (index === 0 ? ' post-featured' : '')} key={title}>
+            <div className="post-top"><span>{String(index + 1).padStart(2, '0')}</span><span>{date}</span></div>
+            <div className="post-visual" aria-hidden="true">
               <div className="post-visual-ring" />
               <Icon size={27}/>
-              <span>LINKEDIN</span>
+              <span>SSK / FIELD NOTES</span>
             </div>
             <span className="post-type">{eyebrow}</span>
-            <h3 className="px-5 mt-2 text-2xl leading-none tracking-tight">{title}</h3>
+            <h3>{title}</h3>
             {highlight && <div className="post-highlight">{highlight}</div>}
             <p>{description}</p>
-            <div className="post-tags">{tags.map(tag=><span key={tag}>{tag}</span>)}</div>
+            <div className="post-tags">{tags.map(tag => <span key={tag}>{tag}</span>)}</div>
           </article>
         ))}
       </div>

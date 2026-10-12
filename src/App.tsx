@@ -4,8 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
 
 import Navigation from './components/Navigation';
-import CursorGlow from './components/CursorGlow';
-import ElementsCollection from './components/ElementsCollection';
+import Preloader from './components/Preloader';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -19,38 +18,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   useEffect(() => {
-    ScrollTrigger.refresh();
-    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
+    const frame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => {
+      window.cancelAnimationFrame(frame);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
   }, []);
 
   return (
-    <div className="portfolio-shell">
-      <div className="tree-background" aria-hidden="true">
-        <ElementsCollection
-          variant="generative-tree"
-          speed={1}
-          size={0.65}
-          particleAmount={0}
-          hue={0}
-          saturation={1}
-          brightness={1}
-          opacity={0.77}
-        />
+    <>
+      <Preloader />
+      <div className="portfolio-shell">
+        <div className="ambient-grid" aria-hidden="true" />
+        <Navigation />
+        <main className="relative z-10">
+          <Hero />
+          <About />
+          <Projects />
+          <Skills />
+          <Experience />
+          <Posts />
+          <Contact />
+        </main>
+        <Footer />
       </div>
-      <div className="ambient-grid" aria-hidden="true" />
-      <CursorGlow />
-      <Navigation />
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Posts />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    </>
   );
 }
 

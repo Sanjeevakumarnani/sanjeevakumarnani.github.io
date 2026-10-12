@@ -1,62 +1,53 @@
-# SUGURU SANJEEVA KUMAR — Portfolio
+# SSK — Cinematic Developer Portfolio
 
-Production portfolio website for SUGURU SANJEEVA KUMAR, built with React, TypeScript, Vite, Tailwind CSS, and component-driven UI.
+Live site: https://sanjeevakumarnani.github.io
 
-## Live site
-
-**https://sanjeevakumarnani.github.io**
-
-## Highlights
-
-- Responsive personal portfolio and project showcase
-- Animated hero and interactive visual sections
-- Project and technology presentation
-- Resume-oriented profile content
-- Optimized static deployment through GitHub Pages
-- Structured React components and reusable UI
-- Custom image presentation and visual effects
+A responsive, editorial portfolio for SUGURU SANJEEVA KUMAR. The design uses a white, near-black and vivid-red palette, a letter-by-letter preloader, a GSAP hero reveal, restrained scroll transitions, a project showcase and keyboard-accessible navigation.
 
 ## Stack
 
-- React
-- TypeScript
-- Vite
+- React + TypeScript + Vite
 - Tailwind CSS
-- Component-based UI
-- GitHub Pages
+- GSAP + ScrollTrigger
+- Lucide React
+- GitHub Pages deployment through GitHub Actions
 
-## Project structure
+## Run locally
 
-```
-src/
-├── components/   Reusable UI components
-├── sections/     Major portfolio sections
-├── hooks/        Custom React hooks
-├── types/        Shared TypeScript types
-└── App.css       Application-specific styling
-```
+Install Node.js 20 or newer, then run:
 
-## Development
+    npm install
+    npm run dev
 
-```bash
-npm install
-npm run dev
-```
+Validate a production build:
 
-Build for production:
+    npm run build
+    npm run lint
 
-```bash
-npm run build
-```
+## Update portfolio content
+
+- Hero and social links: src/sections/Hero.tsx
+- Project titles, descriptions, technologies and destinations: src/sections/Projects.tsx
+- About section: src/sections/About.tsx
+- Skills: src/sections/Skills.tsx
+- Education and experience: src/sections/Experience.tsx
+- Contact links and form integration: src/sections/Contact.tsx
+- Generated resume content: src/components/ResumeTemplate.tsx
+- Global design tokens and responsive styling: src/index.css
+
+## Hero portrait and optional walking video
+
+The verified current hero image is public/images/portrait-normal.jpg. The application uses it as the hero visual and reduced-motion fallback. No walking video was present in the repository when this version was built.
+
+When a full-body walking video is available, add it under public/videos/hero-walk.mp4 and update the media element in src/sections/Hero.tsx to use that path with playsInline, muted autoplay, a poster pointing to /images/portrait-normal.jpg, and a graceful image fallback. Keep the video unmirrored and preserve its intrinsic aspect ratio. The existing image-based entrance remains the reliable fallback.
 
 ## Deployment
 
-The site is deployed as a GitHub Pages project from this repository.
+Pushing to main triggers .github/workflows/deploy.yml. GitHub Actions installs dependencies, runs the Vite production build and publishes dist to GitHub Pages.
 
-## Author
+## Verified project links
 
-**SUGURU SANJEEVA KUMAR**
-
-- GitHub: https://github.com/Sanjeevakumarnani
-- LinkedIn: https://www.linkedin.com/in/sanjeevakumarnani/
-- Portfolio: https://sanjeevakumarnani.github.io
+- OmniRep: https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK
+- CrisisOps: https://github.com/Sanjeevakumarnani/CrisisOps
+- EngramOps: https://github.com/Sanjeevakumarnani/EngramOps
+- SocioSports: https://github.com/Sanjeevakumarnani/SocioSports

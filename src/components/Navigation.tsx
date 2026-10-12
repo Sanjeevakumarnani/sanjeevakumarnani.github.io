@@ -1,161 +1,115 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, FileDown } from 'lucide-react';
+import { FileDown, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useResumeDownload } from '../hooks/useResumeDownload';
 import { ResumeHiddenContainer } from './ResumeDownload';
 
 const navLinks = [
   { label: 'About', href: '#about', number: '01' },
-  { label: 'Skills', href: '#skills', number: '02' },
-  { label: 'Work', href: '#projects', number: '03' },
-  { label: 'Experience', href: '#experience', number: '04' },
-  { label: 'LinkedIn', href: '#posts', number: '05' },
+  { label: 'Work', href: '#projects', number: '02' },
+  { label: 'Skills', href: '#skills', number: '03' },
+  { label: 'Journey', href: '#experience', number: '04' },
+  { label: 'Updates', href: '#posts', number: '05' },
   { label: 'Contact', href: '#contact', number: '06' },
 ];
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { resumeRef, downloadResume } = useResumeDownload();
   const [isGenerating, setIsGenerating] = useState(false);
+  const { resumeRef, downloadResume } = useResumeDownload();
 
   useEffect(() => {
     let frame = 0;
     const handleScroll = () => {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 40);
+        setIsScrolled(window.scrollY > 24);
         frame = 0;
       });
     };
-
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleKeyDown);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault();
     setIsMobileMenuOpen(false);
-    
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    const target = document.querySelector<HTMLElement>(href);
+    if (!target) return;
+    window.history.replaceState(null, '', href);
+    target.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
   };
 
-  const handleResumeDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleResumeDownload = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isGenerating) return;
     setIsGenerating(true);
-    await downloadResume();
-    setIsGenerating(false);
     setIsMobileMenuOpen(false);
+    try {
+      await downloadResume();
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
     <>
-      <nav 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300
-          ${isScrolled 
-            ? 'bg-[#080808]/78 backdrop-blur-xl border-b border-white/10 shadow-2xl' 
-            : 'bg-transparent'
-          }
-        `}
-      >
-        <div className="px-6 md:px-12 lg:px-12 py-4 md:py-6 flex items-center justify-between max-w-7xl mx-auto">
-          {/* Logo */}
-          <a 
-            href="#hero" 
-            onClick={(e) => handleLinkClick(e, '#hero')}
-            className="font-mono text-2xl font-bold text-accent hover:text-[#e6f1ff] transition-colors"
-          >
-            SSK
+      <nav className={'site-nav' + (isScrolled ? ' is-scrolled' : '')} aria-label="Main navigation">
+        <div className="site-nav-inner">
+          <a href="#hero" onClick={(event) => handleLinkClick(event, '#hero')} className="nav-brand" aria-label="SSK home">
+            SSK<span>.</span>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className="nav-link flex items-center gap-1 group"
-              >
-                <span className="text-accent text-xs">{link.number}.</span>
-                <span className="group-hover:text-accent transition-colors">{link.label}</span>
+          <div className="nav-links">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} onClick={(event) => handleLinkClick(event, link.href)} className="nav-link">
+                <span>{link.number}</span>{link.label}
               </a>
             ))}
-            
-            <a 
-              href="#"
-              onClick={handleResumeDownload}
-              className={`btn-small ml-4 flex items-center gap-2 ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              {isGenerating ? 'Generating...' : (
-                <>
-                  Resume
-                  <FileDown className="w-4 h-4" />
-                </>
-              )}
-            </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-accent hover:text-[#e6f1ff] transition-colors"
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      <div 
-        className={`fixed inset-0 z-40 bg-[#0a192f] transition-all duration-300 md:hidden
-          ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}
-        `}
-      >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {navLinks.map((link, index) => (
-            <a
-              key={index}
-              href={link.href}
-              onClick={(e) => handleLinkClick(e, link.href)}
-              className="text-2xl font-medium text-[#e6f1ff] hover:text-accent transition-colors flex items-center gap-3"
-              style={{ 
-                transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms',
-                opacity: isMobileMenuOpen ? 1 : 0,
-                transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)'
-              }}
-            >
-              <span className="text-accent font-mono text-lg">{link.number}.</span>
-              {link.label}
+          <div className="nav-actions">
+            <a href="#resume" onClick={handleResumeDownload} className="nav-resume" aria-busy={isGenerating}>
+              {isGenerating ? 'Preparing' : 'Resume'} <FileDown size={15} />
             </a>
-          ))}
-          
-          <a 
-            href="#"
-            onClick={handleResumeDownload}
-            className={`btn-primary mt-4 flex items-center gap-2 ${isGenerating ? 'opacity-50' : ''}`}
-            style={{ 
-              transitionDelay: isMobileMenuOpen ? '250ms' : '0ms',
-              opacity: isMobileMenuOpen ? 1 : 0
-            }}
-          >
-            {isGenerating ? 'Generating...' : (
-              <>
-                Resume
-                <FileDown className="w-5 h-5" />
-              </>
-            )}
-          </a>
+            <button
+              type="button"
+              className="nav-menu-toggle"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+            >
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Hidden Resume Component for PDF Rendering */}
+        {isMobileMenuOpen && (
+          <div id="mobile-navigation" className="mobile-nav-panel">
+            <div className="mobile-nav-kicker">NAVIGATE / SSK</div>
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} onClick={(event) => handleLinkClick(event, link.href)} className="mobile-nav-link">
+                <span>{link.number}</span>{link.label}<ArrowUpRight size={16} />
+              </a>
+            ))}
+            <a href="#resume" onClick={handleResumeDownload} className="mobile-nav-resume">
+              {isGenerating ? 'Preparing resume…' : 'Download resume'} <FileDown size={16} />
+            </a>
+          </div>
+        )}
+      </nav>
       <ResumeHiddenContainer ref={resumeRef} />
     </>
   );

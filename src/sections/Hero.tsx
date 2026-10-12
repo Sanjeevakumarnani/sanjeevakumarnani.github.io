@@ -1,115 +1,104 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, ChevronDown, Github, Linkedin, MapPin, Sparkles } from 'lucide-react';
-import TextScramble from '../components/TextScramble';
+import { ArrowDown, ArrowRight, Github, Linkedin, MapPin, Sparkles } from 'lucide-react';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-reveal',
-        { opacity: 0, y: 34, filter: 'blur(12px)' },
-        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, stagger: 0.1, ease: 'power3.out', delay: 0.25 }
-      );
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
 
-      const visual = visualRef.current;
-      if (!visual || window.matchMedia('(pointer: coarse)').matches) return;
-      const rotateY = gsap.quickTo(visual, 'rotateY', { duration: 0.7, ease: 'power3.out' });
-      const rotateX = gsap.quickTo(visual, 'rotateX', { duration: 0.7, ease: 'power3.out' });
-      const moveX = gsap.quickTo(visual, 'x', { duration: 0.7, ease: 'power3.out' });
-      const moveY = gsap.quickTo(visual, 'y', { duration: 0.7, ease: 'power3.out' });
-      const move = (e: MouseEvent) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 2;
-        const y = (e.clientY / window.innerHeight - 0.5) * 2;
-        rotateY(x * 8);
-        rotateX(-y * 8);
-        moveX(x * 8);
-        moveY(y * 6);
-      };
-      window.addEventListener('mousemove', move, { passive: true });
-      return () => {
-        window.removeEventListener('mousemove', move);
-        rotateY.tween.kill();
-        rotateX.tween.kill();
-        moveX.tween.kill();
-        moveY.tween.kill();
-      };
+    const context = gsap.context(() => {
+      const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      timeline
+        .fromTo('.hero-kicker', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 })
+        .fromTo('.hero-intro-line', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.18')
+        .fromTo('.hero-name-line', { opacity: 0, yPercent: 110 }, { opacity: 1, yPercent: 0, duration: 0.82, stagger: 0.12 }, '-=0.12')
+        .fromTo('.hero-subtitle', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.48 }, '-=0.28')
+        .fromTo('.hero-description, .hero-meta, .hero-actions, .hero-socials', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, '-=0.18');
+
+      if (visualRef.current) {
+        gsap.fromTo(visualRef.current,
+          { opacity: 0, x: -46, scale: 0.97 },
+          { opacity: 1, x: 0, scale: 1, duration: 1.05, ease: 'power3.out', delay: 0.35 }
+        );
+      }
     }, sectionRef);
-    return () => ctx.revert();
+
+    return () => context.revert();
   }, []);
 
   return (
     <section ref={sectionRef} id="hero" className="hero-section">
-      <div className="hero-orbit orbit-one" />
-      <div className="hero-orbit orbit-two" />
       <div className="hero-content">
         <div className="hero-copy">
-          <div className="hero-reveal hero-kicker">
+          <div className="hero-kicker">
             <span className="status-dot" />
-            <TextScramble text="Computer Science Engineering Student" delay={0.2} />
+            <span>COMPUTER SCIENCE / BUILDER MINDSET</span>
           </div>
 
-          <h1 className="hero-reveal hero-title">
-            SUGURU<br />
-            <span>SANJEEVA KUMAR</span>
+          <p className="hero-intro-line">HELLO, I'M</p>
+          <h1 className="hero-title" aria-label="Suguru Sanjeeva Kumar">
+            <span className="hero-line-window"><span className="hero-name-line">SUGURU</span></span>
+            <span className="hero-line-window"><span className="hero-name-line hero-name-highlight">SANJEEVA KUMAR<span className="hero-period">.</span></span></span>
           </h1>
 
-          <div className="hero-reveal hero-subtitle">
-            Full-Stack <span>/</span> Cloud <span>/</span> Cybersecurity
+          <div className="hero-subtitle">
+            FULL-STACK DEVELOPER <span>·</span> AI BUILDER <span>·</span><br />
+            CLOUD, MOBILE &amp; SECURITY
           </div>
 
-          <p className="hero-reveal hero-description">
-            I build complete systems across backend logic, cloud infrastructure,
-            mobile interfaces and security layers. Currently studying B.Tech in
-            Computer Science at Geethanjali College of Engineering and Technology.
+          <p className="hero-description">
+            I build practical software—from full-stack web applications and AI-enabled tools to mobile experiences, cloud-backed systems and security-focused products. I care about useful interfaces, readable code and systems that work beyond the demo.
           </p>
 
-          <div className="hero-reveal hero-meta">
-            <span><MapPin size={15} /> Greater Hyderabad Area</span>
-            <span><Sparkles size={15} /> Open to learning & building</span>
+          <div className="hero-meta">
+            <span><MapPin size={14} /> Greater Hyderabad Area</span>
+            <span><Sparkles size={14} /> B.Tech CSE · Lateral Entry</span>
           </div>
 
-          <div className="hero-reveal hero-actions">
-            <a href="#projects" className="neo-button primary">
-              Explore work <ArrowRight size={17} />
-            </a>
-            <a href="#contact" className="neo-button">
-              Contact me
-            </a>
+          <div className="hero-actions">
+            <a href="#projects" className="neo-button primary">Explore selected work <ArrowRight size={16} /></a>
+            <a href="#contact" className="neo-button">Start a conversation</a>
           </div>
 
-          <div className="hero-reveal hero-socials">
-            <a href="https://github.com/ssksanjeevakumar" target="_blank" rel="noreferrer"><Github size={18} /> GitHub</a>
-            <a href="https://www.linkedin.com/in/ssksanjeevakumar" target="_blank" rel="noreferrer"><Linkedin size={18} /> LinkedIn</a>
+          <div className="hero-socials">
+            <a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer"><Github /> GitHub</a>
+            <a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer"><Linkedin /> LinkedIn</a>
           </div>
         </div>
 
         <div className="hero-visual-wrap">
-          <div ref={visualRef} className="portrait-3d hero-reveal">
-            <div className="portrait-backplate" />
-            <div className="portrait-glow" />
-            <div className="portrait-frame">
-              <img src="/images/portrait-normal.jpg" alt="SUGURU SANJEEVA KUMAR" width="410" height="540" fetchPriority="high" decoding="async" />
-              <div className="portrait-scan" />
-              <div className="portrait-corner top-left" />
-              <div className="portrait-corner top-right" />
-              <div className="portrait-corner bottom-left" />
-              <div className="portrait-corner bottom-right" />
-            </div>
-            <div className="portrait-label label-a">SSK / 2026</div>
-            <div className="portrait-label label-b">FULL STACK + SECURITY</div>
+          <div ref={visualRef} className="portrait-stage">
             <div className="portrait-depth depth-a" />
             <div className="portrait-depth depth-b" />
+            <div className="portrait-frame">
+              <img
+                src="/images/portrait-normal.jpg"
+                alt="Portrait of Suguru Sanjeeva Kumar"
+                width="410"
+                height="540"
+                fetchPriority="high"
+                decoding="async"
+              />
+              <div className="portrait-scan" aria-hidden="true" />
+              <div className="portrait-corner top-left" aria-hidden="true" />
+              <div className="portrait-corner top-right" aria-hidden="true" />
+              <div className="portrait-corner bottom-left" aria-hidden="true" />
+              <div className="portrait-corner bottom-right" aria-hidden="true" />
+            </div>
+            <div className="portrait-label label-a">SSK / BUILT IN PUBLIC</div>
+            <div className="portrait-label label-b">FULL STACK + AI</div>
+            <div className="portrait-badge"><span /> Learning by building</div>
           </div>
         </div>
       </div>
 
-      <div className="hero-bottom">
-        <span>SCROLL TO ENTER THE WORKSPACE</span>
-        <ChevronDown size={18} />
-      </div>
+      <a href="#about" className="hero-bottom" aria-label="Scroll to the about section">
+        <span>SCROLL TO EXPLORE THE WORK</span>
+        <ArrowDown size={16} />
+      </a>
     </section>
   );
 }

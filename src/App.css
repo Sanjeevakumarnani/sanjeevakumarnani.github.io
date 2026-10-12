@@ -1,4 +1,4 @@
 html { scroll-behavior: smooth; }
-*:focus-visible { outline: 1px solid #d5ad69; outline-offset: 4px; }
+*:focus-visible { outline: 2px solid #ff3038; outline-offset: 4px; }
 button:disabled { cursor: not-allowed; opacity: .6; }
-::selection { background: rgba(213,173,105,.28); color: #fff; }
+::selection { background: rgba(255, 48, 56, .18); color: #111; }
