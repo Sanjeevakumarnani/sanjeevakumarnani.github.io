@@ -34,7 +34,7 @@ const projects: Project[] = [
     icon: Fingerprint,
     visual: 'identity',
     repo: 'https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK',
-    live: 'https://omni-rep-ps-64-innoblock.vercel.app',
+    live: 'https://omni-rep-ps-64-innoblock-ly8xronci-sanjeevakumarnanis-projects.vercel.app/',
     featured: true,
   },
   {

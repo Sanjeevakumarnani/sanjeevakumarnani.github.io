@@ -5,12 +5,11 @@ import { Mail, Phone, Linkedin, Github, ArrowUpRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type FormStatus = 'idle' | 'sent' | 'error';
+type FormStatus = 'idle' | 'draft';
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null);
   const [status, setStatus] = useState<FormStatus>('idle');
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
@@ -23,28 +22,16 @@ export default function Contact() {
     return () => context.revert();
   }, []);
 
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
+  function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    setBusy(true);
-    setStatus('idle');
-
-    try {
-      const response = await fetch('https://formspree.io/f/mbdzlabj', {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data,
-      });
-      if (!response.ok) throw new Error('Message submission failed');
-      form.reset();
-      setStatus('sent');
-      window.setTimeout(() => setStatus('idle'), 5000);
-    } catch {
-      setStatus('error');
-    } finally {
-      setBusy(false);
-    }
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get('name') ?? '').trim();
+    const email = String(data.get('email') ?? '').trim();
+    const message = String(data.get('message') ?? '').trim();
+    const subject = encodeURIComponent('Portfolio enquiry from ' + name);
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message);
+    window.location.href = 'mailto:ssksanjeevakumar198@gmail.com?subject=' + subject + '&body=' + body;
+    setStatus('draft');
   }
 
   return (
@@ -68,10 +55,9 @@ export default function Contact() {
           <label>Name<input name="name" autoComplete="name" required placeholder="Your name" /></label>
           <label>Email<input name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></label>
           <label>Message<textarea name="message" rows={5} required placeholder="What are you building?" /></label>
-          {status === 'sent' && <p className="contact-status" aria-live="polite">Message sent. Thank you for reaching out.</p>}
-          {status === 'error' && <p className="contact-status error" role="alert">The form could not submit. Use the email link on the left instead.</p>}
-          <button type="submit" className="neo-button primary" disabled={busy}>
-            {busy ? 'SENDING MESSAGE…' : status === 'sent' ? 'MESSAGE SENT' : 'SEND MESSAGE'}
+          {status === 'draft' && <p className="contact-status" aria-live="polite">Your email app should open with this message filled in. Review it and press Send there.</p>}
+          <button type="submit" className="neo-button primary">
+            OPEN EMAIL APP <ArrowUpRight size={15} />
           </button>
         </form>
       </div>
