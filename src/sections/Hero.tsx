@@ -84,17 +84,17 @@ export default function Hero() {
                   loop
                   playsInline
                   preload="metadata"
-                  poster="/images/portrait-normal.jpg"
+                  poster={`${import.meta.env.BASE_URL}images/portrait-normal.jpg`}
                   aria-label="Cinematic full-body portrait video"
                   onCanPlay={() => setVideoReady(true)}
-                  onError={() => setVideoFailed(true)}
+                  onError={() => { setVideoFailed(true); setVideoReady(false); }}
                 >
-                  <source src="/videos/hero-walk-portfolio-portrait.mp4" type="video/mp4" />
+                  <source src={`${import.meta.env.BASE_URL}videos/hero-walk-portfolio-portrait.mp4?v=20261012`} type="video/mp4" />
                 </video>
               )}
               <img
                 className={'portrait-image' + (videoReady && !videoFailed ? ' is-video-ready' : '')}
-                src="/images/portrait-normal.jpg"
+                src={`${import.meta.env.BASE_URL}images/portrait-normal.jpg`}
                 alt="Portrait of Suguru Sanjeeva Kumar"
                 width="410"
                 height="540"
