@@ -1,170 +1,58 @@
-import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useState, type ReactNode } from 'react';
 import './App.css';
 
-gsap.registerPlugin(ScrollTrigger);
-
-type Project = { number: string; name: string; category: string; description: string; stack: string[]; repo: string; demo?: string };
+type Lens = 'recruiter' | 'developer' | 'creator';
+type Project = { n: string; title: string; category: string; description: string; stack: string[]; repo: string; demo?: string };
 const projects: Project[] = [
-  { number: '01', name: 'OmniRep', category: 'WEB3 / DIGITAL IDENTITY', description: 'A portable, explainable reputation passport that brings activity from multiple testnet wallets into one transparent profile.', stack: ['React', 'TypeScript', 'Blockchain'], repo: 'https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK', demo: 'https://omni-rep-ps-64-innoblock-ly8xronci-sanjeevakumarnanis-projects.vercel.app/' },
-  { number: '02', name: 'CrisisOps', category: 'CIVIC TECH / DISASTER RESPONSE', description: 'An operational memory engine for disaster teams coordinating people, needs, resources and transport constraints.', stack: ['React', 'Data Systems', 'AI'], repo: 'https://github.com/Sanjeevakumarnani/CrisisOps' },
-  { number: '03', name: 'EngramOps', category: 'HUMANITARIAN TECHNOLOGY', description: 'A response workflow concept focused on preserving field context and making operational information easier to retrieve.', stack: ['TypeScript', 'Web App', 'Data'], repo: 'https://github.com/Sanjeevakumarnani/EngramOps' },
-  { number: '04', name: 'MediKiosk+', category: 'HEALTH TECH / PATIENT INTAKE', description: 'A clinical intake experience with token generation, estimated waiting times, a doctor console and OPD queue prioritisation.', stack: ['React', 'PostgreSQL', 'Prisma'], repo: 'https://github.com/Sanjeevakumarnani' },
-  { number: '05', name: 'SocioSports', category: 'COMMUNITY / SPORTS', description: 'A community-first sports platform designed around discovery, participation and a smoother digital experience for players.', stack: ['React', 'TypeScript', 'Tailwind'], repo: 'https://github.com/Sanjeevakumarnani/sociosportsv2' },
-  { number: '06', name: 'CampusWave', category: 'CAMPUS / MOBILE + BACKEND', description: 'A campus radio and student platform with a Flask backend, MySQL persistence and a Kotlin Android client.', stack: ['Flask', 'MySQL', 'Kotlin'], repo: 'https://github.com/Sanjeevakumarnani/Campus_Wave__Backend' },
-  { number: '07', name: 'LinkShield', category: 'SECURITY / ANTIPHISHING', description: 'A security concept designed to help people recognise suspicious links and reduce exposure to phishing attacks.', stack: ['React Native', 'FastAPI', 'Supabase'], repo: 'https://github.com/Sanjeevakumarnani' },
-  { number: '08', name: 'NutriSense AI', category: 'AI / WELLNESS', description: 'An AI-focused exploration of nutrition insights and accessible digital wellness support.', stack: ['AI', 'Web App', 'Data'], repo: 'https://github.com/Sanjeevakumarnani/nutrisense-ai' },
+ {n:'01',title:'OmniRep',category:'WEB3 · DIGITAL IDENTITY',description:'A portable, explainable on-chain reputation passport that brings activity from multiple testnet wallets into one transparent profile.',stack:['React','TypeScript','Blockchain','API'],repo:'https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK',demo:'https://omni-rep-ps-64-innoblock-ly8xronci-sanjeevakumarnanis-projects.vercel.app/'},
+ {n:'02',title:'CrisisOps',category:'CIVIC TECH · DISASTER RESPONSE',description:'An operational memory engine for disaster teams to coordinate people, needs, resources and transport constraints when every minute matters.',stack:['React','Data Systems','AI'],repo:'https://github.com/Sanjeevakumarnani/CrisisOps'},
+ {n:'03',title:'EngramOps',category:'HUMANITARIAN TECH',description:'A response-workflow platform focused on preserving field context and making operational information easier to retrieve.',stack:['TypeScript','Web App','Data'],repo:'https://github.com/Sanjeevakumarnani/EngramOps'},
+ {n:'04',title:'MediKiosk+',category:'HEALTH TECH · PATIENT INTAKE',description:'A clinical intake kiosk with token generation, estimated waiting times, doctor console and OPD queue prioritisation.',stack:['React','PostgreSQL','Prisma','AI'],repo:'https://github.com/Sanjeevakumarnani'},
+ {n:'05',title:'SocioSports',category:'COMMUNITY · SPORTS',description:'A community-first sports platform designed around discovery, participation and a smoother digital experience for players.',stack:['React','TypeScript','Tailwind'],repo:'https://github.com/Sanjeevakumarnani/sociosportsv2'},
+ {n:'06',title:'CampusWave',category:'CAMPUS · MOBILE + BACKEND',description:'A campus radio and student experience platform with a Flask backend, MySQL persistence and a Kotlin Android client.',stack:['Flask','MySQL','Kotlin'],repo:'https://github.com/Sanjeevakumarnani/Campus_Wave__Backend'},
+ {n:'07',title:'LinkShield',category:'SECURITY · ANTIPHISHING',description:'A security concept designed to help people recognise suspicious links and reduce exposure to phishing attacks.',stack:['React Native','FastAPI','Supabase'],repo:'https://github.com/Sanjeevakumarnani'},
+ {n:'08',title:'NutriSense AI',category:'AI · WELLNESS',description:'An AI-focused exploration of nutrition insights and accessible digital wellness support.',stack:['AI','Web App','Data'],repo:'https://github.com/Sanjeevakumarnani/nutrisense-ai'}
 ];
-const skillGroups = [
-  { title: 'Frontend engineering', items: 'React · TypeScript · Vite · Tailwind CSS · HTML · CSS' },
-  { title: 'Backend & data', items: 'Python · Flask · FastAPI · SQL · PostgreSQL · MySQL · Prisma' },
-  { title: 'AI & intelligent systems', items: 'LLM API integration · AI product workflows · prompt design' },
-  { title: 'Platforms & delivery', items: 'Git · GitHub · Vercel · Render · Supabase · Android' },
+const skills = [
+ ['Frontend','React · TypeScript · Vite · Tailwind CSS · GSAP'],
+ ['Backend & data','Python · Flask · FastAPI · Node.js · SQL · PostgreSQL · MySQL'],
+ ['AI & intelligent systems','LLM APIs · AI product integration · data workflows · prompt design'],
+ ['Platforms & tools','Git · GitHub · Vercel · Render · Supabase · Android']
 ];
 const journey = [
-  { year: 'NOW', title: 'B.Tech · Computer Science & Engineering', note: 'Lateral-entry student at Geethanjali College of Engineering and Technology. Learning by building.' },
-  { year: '2026', title: 'OmniRep · INNOBLOCK PS64', note: 'Built and deployed a cross-wallet reputation passport concept for a digital identity problem statement.' },
-  { year: '2026', title: 'CrisisOps / EngramOps', note: 'Explored persistent operational memory for disaster response and field coordination.' },
-  { year: '2025—26', title: 'Hackathons & product builds', note: 'Turning problem statements into prototypes across health, safety, security, campus life and community technology.' },
+ ['NOW','B.Tech · Computer Science & Engineering','Lateral-entry student at Geethanjali College of Engineering and Technology. Learning by building.'],
+ ['2026','OmniRep · INNOBLOCK PS64','Built a cross-wallet reputation passport concept for a digital identity problem statement.'],
+ ['2026','CrisisOps / EngramOps','Explored persistent operational memory for disaster response and field coordination.'],
+ ['2025–26','Hackathons & product builds','Turning problem statements into prototypes across health, safety, security, campus life and community technology.']
 ];
+const lensText: Record<Lens,string> = {
+ recruiter:'A CSE student and full-stack builder interested in internships, collaborative engineering and real-world product problems.',
+ developer:'Explore the systems, stacks and implementation choices behind my projects—from full-stack apps to APIs and data-backed workflows.',
+ creator:'I like starting with a messy problem, shaping a useful experience and learning whatever the build needs along the way.'
+};
+function Link({href,children}:{href:string;children:ReactNode}) { return <a href={href} target="_blank" rel="noreferrer">{children} ↗</a>; }
 
 export default function App() {
-  const root = useRef<HTMLDivElement>(null);
-  const hero = useRef<HTMLElement>(null);
-  const beam = useRef<HTMLDivElement>(null);
-  const [contactOpen, setContactOpen] = useState(false);
-  const [lightOn, setLightOn] = useState(true);
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.nav-inner', { y: -22, opacity: 0, duration: 0.8, ease: 'power3.out' });
-      gsap.from('.hero-kicker, .hero-title-line, .hero-deck, .hero-actions', {
-        y: 28, opacity: 0, duration: 0.85, stagger: 0.12, ease: 'power3.out', delay: 0.15,
-      });
-      gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
-        gsap.fromTo(el, { y: 38, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 86%', once: true },
-        });
-      });
-      gsap.utils.toArray<HTMLElement>('.project-row').forEach((el, i) => {
-        gsap.fromTo(el, { y: 32, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 0.65, delay: (i % 2) * 0.08,
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-        });
-      });
-      gsap.fromTo('.collab-hand', { x: -24, y: 18, rotation: -5, opacity: 0 }, {
-        x: 0, y: 0, rotation: 0, opacity: 1, duration: 1,
-        scrollTrigger: { trigger: '.collab-section', start: 'top 76%', once: true },
-      });
-      gsap.fromTo('.string-path', { strokeDashoffset: 240 }, {
-        strokeDashoffset: 0, duration: 1.1, stagger: 0.12, ease: 'power2.out',
-        scrollTrigger: { trigger: '.collab-section', start: 'top 70%', once: true },
-      });
-    }, root);
-    return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { setContactOpen(false); setActiveProject(null); setMenuOpen(false); }
-    };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
-  }, []);
-
-  useEffect(() => {
-    const section = hero.current;
-    const light = beam.current;
-    if (!section || !light) return;
-    let frame = 0;
-    let x = window.innerWidth * 0.68;
-    let y = window.innerHeight * 0.36;
-    const move = (event: PointerEvent) => {
-      x = event.clientX; y = event.clientY;
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        section.style.setProperty('--beam-x', x + 'px');
-        section.style.setProperty('--beam-y', y + 'px');
-        frame = 0;
-      });
-    };
-    section.addEventListener('pointermove', move, { passive: true });
-    return () => { section.removeEventListener('pointermove', move); if (frame) cancelAnimationFrame(frame); };
-  }, []);
-
-  return <div className="portfolio" ref={root}>
-    <div className="film-grain" aria-hidden="true" />
-    <header className="site-nav">
-      <div className="nav-inner">
-        <a className="wordmark" href="#top" aria-label="SSK home">SSK<span>®</span></a>
-        <nav className={menuOpen ? 'nav-links nav-links-open' : 'nav-links'} aria-label="Main navigation">
-          <a href="#about" onClick={() => setMenuOpen(false)}>01 / About</a>
-          <a href="#work" onClick={() => setMenuOpen(false)}>02 / Work</a>
-          <a href="#skills" onClick={() => setMenuOpen(false)}>03 / Toolkit</a>
-          <a href="#journey" onClick={() => setMenuOpen(false)}>04 / Journey</a>
-        </nav>
-        <div className="nav-end"><span className="availability"><i /> BUILDING IN HYDERABAD</span><button className="nav-contact" onClick={() => setContactOpen(true)}>LET'S TALK ↗</button><button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">{menuOpen ? 'CLOSE' : 'MENU'}</button></div>
-      </div>
-    </header>
-
-    <main id="top">
-      <section className="hero" ref={hero}>
-        <div className="hero-underlay" aria-hidden="true"><span>SANJEEVA</span><span>KUMAR</span><div className="underlay-caption">A WORK IN PROGRESS / 2026</div></div>
-        <div className="hero-overlay" aria-hidden="true" />
-        <div className="hero-content">
-          <p className="hero-kicker"><span className="red-square" /> INDEPENDENT DEVELOPER · PORTFOLIO 2026</p>
-          <h1><span className="hero-title-line">SUGURU</span><span className="hero-title-line hero-title-second">SANJEEVA <em>KUMAR.</em></span></h1>
-          <div className="hero-divider"><span>CS ENGINEERING STUDENT</span><span>17°23' N / 78°29' E</span></div>
-          <p className="hero-deck">I turn real-world problems into <strong>useful digital products.</strong><br />Full-stack systems, AI-enabled tools and ideas built to work.</p>
-          <div className="hero-actions"><a className="button-primary" href="#work">EXPLORE THE WORK <span>↘</span></a><button className="button-text" onClick={() => setLightOn(!lightOn)}>{lightOn ? 'DISABLE' : 'ENABLE'} FLASHLIGHT <span>◉</span></button></div>
-        </div>
-        <div className="hero-portrait-wrap">
-          <div className="portrait-yellow-block" />
-          <div className="portrait-label portrait-label-top">FIG. 01 — THE BUILDER</div>
-          <img className="hero-portrait" src={import.meta.env.BASE_URL + 'images/portrait-mask.png'} alt="Portrait of Suguru Sanjeeva Kumar" />
-          <div className="portrait-label portrait-label-bottom">S. SANJEEVA KUMAR <span>·</span> CSE</div>
-        </div>
-        <div ref={beam} className={lightOn ? 'flashlight-layer' : 'flashlight-layer flashlight-disabled'} aria-hidden="true"><div className="flashlight-content">IDEAS INTO SYSTEMS <span>BUILD / TEST / REFINE</span></div></div>
-        <div className="hero-foot"><span>SCROLL TO EXPLORE ↓</span><span>DESIGNED AROUND REAL WORK</span><span>01 — INTRODUCTION</span></div>
-      </section>
-
-      <section className="intro section-pad" id="about" data-reveal>
-        <div className="section-index"><span>01</span><span>THE PERSON BEHIND THE BUILDS</span></div>
-        <div className="intro-layout"><h2>Curious by nature.<br /><span>Builder by choice.</span></h2><div className="intro-copy"><p>I'm a Computer Science student who learns by building. My work spans full-stack applications, AI-enabled products, security concepts, campus tools and civic-tech ideas.</p><p>I enjoy taking a problem from an early sketch to a working prototype: shaping the experience, connecting the backend, testing the flow and improving the rough edges.</p><a className="inline-link" href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">EXPLORE MY GITHUB ↗</a></div></div>
-        <div className="principles"><div><span>01 / APPROACH</span><strong>Start with the problem.</strong></div><div><span>02 / PRACTICE</span><strong>Make the system useful.</strong></div><div><span>03 / MINDSET</span><strong>Keep learning in public.</strong></div></div>
-      </section>
-
-      <section className="work-section section-pad" id="work">
-        <div className="section-heading" data-reveal><div><p className="eyebrow">02 / SELECTED PROJECTS</p><h2>Proof of <span>practice.</span></h2></div><p>Different problems. Different tools.<br />One consistent habit: make something real.</p></div>
-        <div className="project-list">{projects.map((project, index) => <article className={'project-row project-row-' + project.number} key={project.number} data-reveal>
-          <button className={'project-visual visual-' + project.number} onClick={() => setActiveProject(project)} aria-label={'Open ' + project.name + ' project details'}><span className="visual-index">SSK ORIGINAL / {project.number}</span><span className="visual-glyph">{['◈','⌁','⟡','✚','◎','∿','⌑','✳'][index]}</span><span className="visual-name">{project.name}</span><span className="visual-category">{project.category}</span><span className="visual-open">↗</span></button>
-          <div className="project-info"><p className="project-meta">{project.number} — {project.category}</p><button className="project-title-button" onClick={() => setActiveProject(project)}><h3>{project.name}</h3><span>↗</span></button><p className="project-description">{project.description}</p><div className="stack-list">{project.stack.map(item => <span key={item}>{item}</span>)}</div><div className="project-links"><a href={project.repo} target="_blank" rel="noreferrer">SOURCE CODE ↗</a>{project.demo && <a href={project.demo} target="_blank" rel="noreferrer">LIVE DEMO ↗</a>}<button onClick={() => setActiveProject(project)}>CASE NOTES +</button></div></div>
-        </article>)}</div>
-      </section>
-
-      <section className="skills-section section-pad" id="skills">
-        <div className="section-heading" data-reveal><div><p className="eyebrow">03 / THE TOOLKIT</p><h2>Tools with <span>purpose.</span></h2></div><p>Technologies are a means to an end.<br />These are the tools I use to explore and build.</p></div>
-        <div className="skills-grid">{skillGroups.map((group, i) => <article className="skill-item" data-reveal key={group.title}><span>0{i + 1} / CATEGORY</span><h3>{group.title}</h3><p>{group.items}</p><div className="skill-rule"><i /></div></article>)}</div>
-      </section>
-
-      <section className="journey-section section-pad" id="journey">
-        <div className="section-heading" data-reveal><div><p className="eyebrow">04 / THE TIMELINE</p><h2>Still in the <span>making.</span></h2></div><p>Every build is a chapter.<br />Every challenge leaves a lesson.</p></div>
-        <div className="journey-list">{journey.map((item, i) => <article className="journey-row" data-reveal key={item.title}><span className="journey-year">{item.year}</span><span className="journey-dot" /><div><span className="journey-chapter">CHAPTER 0{i + 1}</span><h3>{item.title}</h3><p>{item.note}</p></div><span className="journey-arrow">↗</span></article>)}</div>
-      </section>
-
-      <section className="collab-section" id="contact">
-        <div className="collab-top"><span>05 / OPEN INVITATION</span><span>GOOD WORK STARTS WITH A CONVERSATION</span></div>
-        <div className="collab-layout"><div className="collab-copy"><p className="eyebrow">HAVE A PROBLEM WORTH SOLVING?</p><h2>LET'S MAKE<br /><em>SOMETHING</em><br />MATTER.</h2><p>For thoughtful collaborations, engineering opportunities and ideas worth building.</p><button className="collab-button" onClick={() => setContactOpen(true)}>LET'S COLLABORATE <span>↗</span></button></div>
-          <div className="hand-scene" aria-hidden="true"><svg className="collab-strings" viewBox="0 0 480 390" fill="none"><path className="string-path" d="M30 24 C130 70 130 150 246 172 S350 190 405 145" /><path className="string-path" d="M12 65 C100 100 170 165 260 190 S360 218 422 175" /><path className="string-path" d="M48 105 C120 140 170 205 255 220 S350 248 440 204" /><path className="string-path" d="M40 145 C120 180 155 240 242 252 S340 278 454 238" /></svg><svg className="collab-hand" viewBox="0 0 300 320" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M70 290 C53 269 38 245 30 224 L9 175 C3 161 9 149 20 146 C30 143 38 150 45 164 L68 205 L42 114 C37 98 43 88 54 86 C66 84 72 94 77 108 L100 177 L83 76 C81 61 88 51 100 51 C113 51 118 62 120 77 L137 165 L137 42 C137 26 145 17 158 18 C171 19 176 30 176 44 L177 157 L190 83 C193 67 203 61 214 65 C226 69 229 80 226 95 L207 190 C203 214 213 228 230 237 C248 247 261 265 266 289 L70 290 Z" fill="#EAE8E2" stroke="#11110F" strokeWidth="4" strokeLinejoin="round"/><path d="M68 205 L91 235 M100 177 L118 211 M137 165 L147 204 M177 157 L177 197 M207 190 L193 219" stroke="#11110F" strokeWidth="3" strokeLinecap="round"/><path d="M71 290 L266 289" stroke="#11110F" strokeWidth="4"/></svg><span className="hand-note">PULLING IDEAS<br />INTO REALITY ↗</span></div></div>
-        <footer className="site-footer"><a className="wordmark" href="#top">SSK<span>®</span></a><span>© 2026 SUGURU SANJEEVA KUMAR</span><div><a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">GITHUB ↗</a><a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer">LINKEDIN ↗</a><button onClick={() => setContactOpen(true)}>EMAIL ↗</button></div></footer>
-      </section>
-    </main>
-
-    {activeProject && <div className="modal-backdrop" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setActiveProject(null); }}><section className="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="modal-close" onClick={() => setActiveProject(null)} aria-label="Close project details">×</button><p className="eyebrow">{activeProject.number} / {activeProject.category}</p><h2 id="modal-title">{activeProject.name}</h2><p>{activeProject.description}</p><div className="stack-list">{activeProject.stack.map(item => <span key={item}>{item}</span>)}</div><div className="modal-links"><a href={activeProject.repo} target="_blank" rel="noreferrer">OPEN REPOSITORY ↗</a>{activeProject.demo && <a href={activeProject.demo} target="_blank" rel="noreferrer">OPEN LIVE DEMO ↗</a>}</div></section></div>}
-    {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) setContactOpen(false); }}><section className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title"><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close contact panel">×</button><p className="eyebrow">OPEN INVITATION / 2026</p><h2 id="contact-title">Let's make it<br /><em>happen.</em></h2><p>For engineering opportunities, collaboration and project conversations.</p><a href="mailto:ssksanjeevakumar198@gmail.com">ssksanjeevakumar198@gmail.com ↗</a><a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">GitHub ↗</a></section></div>}
-  </div>;
+ const [stage,setStage]=useState<'opening'|'profiles'|'home'>('opening');
+ const [lens,setLens]=useState<Lens>('developer');
+ const [selected,setSelected]=useState<Project|null>(null);
+ const [menu,setMenu]=useState(false);
+ useEffect(()=>{ if(stage==='home') document.body.classList.remove('series-lock'); else document.body.classList.add('series-lock'); return ()=>document.body.classList.remove('series-lock'); },[stage]);
+ useEffect(()=>{ if(!selected)return; const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setSelected(null)};window.addEventListener('keydown',close);return()=>window.removeEventListener('keydown',close);},[selected]);
+ const enter=(id:Lens)=>{setLens(id);setStage('home');window.setTimeout(()=>window.scrollTo({top:0,behavior:'auto'}),30)};
+ return <div className="series-shell"><div className="series-grain" aria-hidden="true"/>
+ {stage!=='home'&&<div className="series-gate"><div className="gate-top"><span className="series-mark">SSK<span>+</span></span><span>AN INDEPENDENT DEVELOPER SERIES</span></div>
+ {stage==='opening'?<div className="gate-center"><p className="gate-eyebrow"><i/> PERSONAL PORTFOLIO · SEASON 2026</p><h1 className="gate-title"><span>SANJEEVA</span><span className="gate-accent">KUMAR.</span></h1><p className="gate-subtitle">THE BUILDER SERIES</p><p className="gate-copy">A collection of ideas turned into prototypes, products and lessons learned.</p><button className="play-button" onClick={()=>setStage('profiles')}><span>▶</span> Enter the series</button><div className="gate-foot"><span>FULL-STACK · AI · PRODUCT ENGINEERING</span><span>SCROLL LESS. BUILD MORE.</span></div></div>
+ :<div className="profile-stage"><p className="gate-eyebrow">CHOOSE YOUR VIEWING PROFILE</p><h2>Who's exploring today?</h2><div className="profile-options">{([['recruiter','R','Recruiter','Projects, impact and collaboration'],['developer','{ }','Developer','Stack, architecture and builds'],['creator','✳','Curious mind','The journey behind the work']] as [Lens,string,string,string][]).map(([id,icon,title,desc])=><button className="profile-option" key={id} onClick={()=>enter(id)}><span className={'profile-avatar avatar-'+id}>{icon}</span><strong>{title}</strong><small>{desc}</small></button>)}</div><button className="text-button" onClick={()=>enter('developer')}>Skip profile selection →</button></div>}</div>}
+ {stage==='home'&&<><header className="series-nav"><a className="series-brand" href="#top">SSK<span>+</span></a><nav className={menu?'nav-links nav-open':'nav-links'}>{[['The Pilot','#about'],['My Journey','#journey'],['Originals','#originals'],['Skills','#skills'],['Contact','#contact']].map(([name,href])=><a key={href} href={href} onClick={()=>setMenu(false)}>{name}</a>)}</nav><div className="nav-right"><span className="profile-pill"><i/>{lens.toUpperCase()} PROFILE</span><button className="menu-toggle" onClick={()=>setMenu(!menu)} aria-label="Toggle navigation">{menu?'×':'☰'}</button></div></header>
+ <main id="top"><section className="series-hero"><div className="hero-backdrop"/><div className="hero-copy"><p className="series-eyebrow"><span className="red-dash"/> FEATURED CREATOR <b>•</b> HYDERABAD, INDIA</p><h1>SUGURU<br/><span>SANJEEVA KUMAR</span></h1><div className="hero-meta-row"><span className="match-score">BUILDER ENERGY</span><span>2026</span><span className="maturity">PORTFOLIO</span><span>8 BUILDS</span></div><p className="hero-role">FULL-STACK DEVELOPER <b>·</b> AI BUILDER <b>·</b> PRODUCT THINKER</p><p className="hero-description">{lensText[lens]}</p><div className="hero-buttons"><a className="play-button" href="#originals"><span>▶</span> Explore projects</a><a className="more-button" href="#about"><span>ⓘ</span> More about me</a></div><div className="hero-socials"><Link href="https://github.com/Sanjeevakumarnani">GitHub</Link><Link href="https://www.linkedin.com/in/sanjeevakumarnani/">LinkedIn</Link><a href="mailto:ssksanjeevakumar198@gmail.com">Email ↗</a></div></div><div className="hero-portrait"><div className="portrait-orbit orbit-one"/><div className="portrait-orbit orbit-two"/><img src={import.meta.env.BASE_URL+'images/portrait-normal.jpg'} alt="Portrait of Suguru Sanjeeva Kumar"/><div className="portrait-caption"><span>SSK / BUILDER MODE</span><b>OPEN TO OPPORTUNITIES</b></div></div><div className="hero-bottom-note"><span>01 / THE INTRODUCTION</span><span>KEEP SCROLLING ↓</span></div></section>
+ <section className="content-section" id="about"><div className="section-head"><div><p className="section-kicker">EPISODE 01 · THE PILOT</p><h2>Curious by nature.<br/><span>Builder by choice.</span></h2></div><span className="episode-rating">★ ORIGINAL STORY</span></div><div className="about-grid"><div className="about-statement"><p>I’m a Computer Science student who learns by building. My work spans full-stack applications, AI-enabled products, security concepts, campus tools and civic-tech ideas.</p><p>I enjoy taking a problem from an early sketch to a working prototype: shaping the user experience, connecting the backend, testing the flow and improving the rough edges.</p><Link href="https://github.com/Sanjeevakumarnani">Explore my GitHub</Link></div><div className="about-facts">{[['01','Product-first','Start with a real user problem, not just a tech stack.'],['02','Full-stack mindset','Care about the interface and the system behind it.'],['03','Always learning','Use projects and hackathons to stretch into new domains.']].map(([n,title,note])=><div key={n}><span>{n}</span><strong>{title}</strong><p>{note}</p></div>)}</div></div></section>
+ <section className="content-section" id="journey"><div className="section-head"><div><p className="section-kicker">EPISODE 02 · THE TIMELINE</p><h2>My <span>journey</span></h2></div><p className="section-note">Every build is a chapter. Every challenge leaves a lesson.</p></div><div className="journey-list">{journey.map(([year,title,note],i)=><article className="journey-item" key={title}><div className="journey-year">{year}</div><div className="journey-marker"><i/></div><div className="journey-copy"><span>CHAPTER 0{i+1}</span><h3>{title}</h3><p>{note}</p></div><span className="journey-arrow">↗</span></article>)}</div></section>
+ <section className="content-section originals-section" id="originals"><div className="section-head"><div><p className="section-kicker">EPISODE 03 · SSK ORIGINALS</p><h2>Built, not <span>just imagined.</span></h2></div><Link href="https://github.com/Sanjeevakumarnani">All repositories</Link></div><div className="project-rail">{projects.map(p=><button className="project-card" key={p.n} onClick={()=>setSelected(p)}><div className={'project-art art-'+p.n}><div className="project-art-top"><span>SSK ORIGINAL</span><span>{p.n} / 08</span></div><div className="project-art-symbol">{({'01':'◈','02':'⌁','03':'⟡','04':'✚','05':'◎','06':'∿','07':'⌑','08':'✳'} as Record<string,string>)[p.n]}</div><div className="project-art-title">{p.title}</div><div className="project-art-bottom">{p.category}</div></div><div className="project-card-copy"><span className="project-category">{p.category}</span><h3>{p.title}</h3><p>{p.description}</p><div className="project-card-footer"><span>{p.stack.slice(0,3).join(' · ')}</span><span className="project-plus">+</span></div></div></button>)}</div><p className="rail-hint">SELECT A PROJECT TO OPEN ITS DETAILS <span>→</span></p></section>
+ <section className="content-section top-picks-section"><div className="section-head"><div><p className="section-kicker">EPISODE 04 · THE WATCHLIST</p><h2>Selected <span>highlights</span></h2></div></div><div className="top-picks">{projects.slice(0,4).map((p,i)=><button key={p.n} className="top-pick" onClick={()=>setSelected(p)}><span className="top-rank">{i+1}</span><div className={'top-poster art-'+p.n}><b>{p.title}</b><small>{p.category}</small></div><div className="top-pick-info"><span>SSK ORIGINAL</span><strong>{p.title}</strong><small>{p.stack.slice(0,3).join(' · ')}</small></div><span className="top-arrow">↗</span></button>)}</div></section>
+ <section className="content-section" id="skills"><div className="section-head"><div><p className="section-kicker">EPISODE 05 · THE TOOLKIT</p><h2>My technical <span>genres</span></h2></div><p className="section-note">Tools are useful when they solve something. Here’s where I use them.</p></div><div className="skills-grid">{skills.map(([title,items],i)=><article className="skill-card" key={title}><span className="skill-index">0{i+1} / CATEGORY</span><h3>{title}</h3><p>{items}</p><div className="skill-line"><span style={{width:(90-i*9)+'%'}}/></div></article>)}</div></section>
+ <section className="content-section proof-section"><div className="section-head"><div><p className="section-kicker">EPISODE 06 · THE BUILD LOG</p><h2>Learning in <span>public.</span></h2></div></div><div className="proof-grid">{[['01 / BLOCKCHAIN','OmniRep','Wallet history should not reset when the wallet changes.','https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK'],['02 / CIVIC TECH','CrisisOps','Make operational context easier to carry through a crisis.','https://github.com/Sanjeevakumarnani/CrisisOps'],['03 / COMMUNITY','SocioSports','Build digital experiences that bring people together.','https://github.com/Sanjeevakumarnani/sociosportsv2']].map(([tag,title,note,url])=><a href={url} target="_blank" rel="noreferrer" key={title}><span>{tag}</span><strong>{title}</strong><p>{note}</p><b>VIEW SOURCE ↗</b></a>)}</div></section>
+ <section className="final-section" id="contact"><div className="final-backdrop"/><p className="section-kicker">SEASON FINALE · YOUR TURN</p><h2>TO BE<br/><span>CONTINUED.</span></h2><p className="final-copy">Have an interesting problem, a team to build with or an opportunity to explore? Let’s talk.</p><div className="final-actions"><a className="play-button" href="mailto:ssksanjeevakumar198@gmail.com"><span>✉</span> Get in touch</a><Link href="https://github.com/Sanjeevakumarnani">Follow the builds</Link><Link href="https://www.linkedin.com/in/sanjeevakumarnani/">Connect on LinkedIn</Link></div><div className="final-footer"><span>© 2026 SUGURU SANJEEVA KUMAR</span><a href="#top">BACK TO TOP ↑</a><span>MADE WITH CURIOSITY IN INDIA</span></div></section></main></>}
+ {selected&&<div className="project-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}}><article className="project-dialog" role="dialog" aria-modal="true" aria-labelledby="project-title"><button className="dialog-close" onClick={()=>setSelected(null)} aria-label="Close project details">×</button><div className={'dialog-art art-'+selected.n}><span>SSK ORIGINAL / {selected.n}</span><strong>{selected.title}</strong></div><div className="dialog-body"><p className="section-kicker">{selected.category}</p><h2 id="project-title">{selected.title}</h2><p>{selected.description}</p><div className="dialog-stack">{selected.stack.map(s=><span key={s}>{s}</span>)}</div><div className="dialog-links"><Link href={selected.repo}>View source code</Link>{selected.demo&&<Link href={selected.demo}>Open live demo</Link>}</div></div></article></div>}
+ </div>;
 }
