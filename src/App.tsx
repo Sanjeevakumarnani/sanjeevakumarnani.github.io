@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, Clock3, Github, Menu, X, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, Menu, X, Sun, Moon } from 'lucide-react';
 import './App.css';
 
 const roles=['Web Developer','App Developer','UI/UX Designer','Graphic Designer','AI Developer'];
