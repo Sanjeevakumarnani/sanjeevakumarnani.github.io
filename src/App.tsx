@@ -1,113 +1,57 @@
-import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronUp, X, Menu, Github, ExternalLink } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, Clock3, Github, Menu, X, Sun, Moon } from 'lucide-react';
 import './App.css';
 
-const roles = ['App Developer', 'Web Developer', 'AI Developer', 'UI/UX Designer', 'Product Builder'];
-
-const doors = [
-  { id:'web', title:'Web Development', sub:'END TO END, FROM SKETCH TO LIVE SITE', color:'blue', desc:'Websites, landing pages and interactive tools, built end to end: from layout and interaction to responsive front-end, SEO and launch.', tags:['React','TypeScript','JavaScript','Vite','Tailwind CSS','GSAP'], work:'OmniRep · MediKiosk+ · SocioSports' },
-  { id:'app', title:'App Development', sub:'FROM THE FIRST IDEA TO THE APP STORE', color:'wine', desc:'Mobile-first experiences, Android applications and connected product workflows designed around real user needs.', tags:['Kotlin','Jetpack Compose','React Native','Capacitor','REST APIs'], work:'CampusWave · LinkShield' },
-  { id:'ui', title:'UI/UX Design', sub:'SIMPLE, CLEAR AND BUILT AROUND PEOPLE', color:'green', desc:'Interfaces that make complex workflows feel natural, with careful attention to hierarchy, accessibility and interaction details.', tags:['Figma','Wireframing','Prototyping','Design systems'], work:'MediKiosk+ · OmniRep' },
-  { id:'graphic', title:'Graphic Design', sub:'VISUALS WITH A CLEAR PURPOSE', color:'orange', desc:'Visual communication for digital products, presentations and identity systems, balancing clarity with a distinctive visual language.', tags:['Visual design','Branding','Presentation design','Canva'], work:'Hackathon presentations · Product identity' },
-  { id:'ai', title:'AI & Product Engineering', sub:'IDEAS INTO WORKING SYSTEMS', color:'brown', desc:'Applied AI, data-aware workflows and full-stack prototypes that solve concrete problems rather than adding technology for its own sake.', tags:['Python','FastAPI','Groq','PostgreSQL','Prisma','LLM APIs'], work:'CrisisOps · MediKiosk+ · OmniRep' },
+const roles=['Web Developer','App Developer','UI/UX Designer','Graphic Designer','AI Developer'];
+const services=[
+ {id:'web',name:'Web Development',tag:'END TO END, FROM SKETCH TO LIVE SITE',color:'navy',desc:'Websites, dashboards and interactive tools — from interface architecture and responsive front-end to API integration, deployment and launch.',projects:['OmniRep','MediKiosk+','SocioSports','CrisisOps']},
+ {id:'app',name:'App Development',tag:'FROM THE FIRST IDEA TO THE APP STORE',color:'plum',desc:'Mobile experiences and connected applications built around clear user workflows, reliable data and practical engineering.',projects:['CampusWave','LinkShield']},
+ {id:'ui',name:'UI/UX Design',tag:'RESEARCH FIRST, PIXELS SECOND',color:'sage',desc:'Interfaces that make complex workflows easier to understand, with careful attention to hierarchy, usability, accessibility and interaction.',projects:['MediKiosk+','OmniRep','CrisisOps']},
+ {id:'graphic',name:'Graphic Design',tag:'VISUAL CONTENT TRUE TO THE BRAND',color:'terra',desc:'Visual communication for digital products, technical presentations, brand identity and event storytelling.',projects:['TechSprint 2026','OmniRep presentation','Hackathon decks']},
 ];
-
-const projects = [
-  { n:'01', name:'OmniRep', category:'Digital Identity / Web3', description:'Your Web3 history should not reset when your wallet changes. A transparent, explainable and portable on-chain reputation passport built from activity across testnet wallets.', stack:'React · TypeScript · EVM · Wallets', repo:'https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK', live:'https://omni-rep-ps-64-innoblock-ly8xronci-sanjeevakumarnanis-projects.vercel.app/', visual:'omni' },
-  { n:'02', name:'CrisisOps', category:'Civic Technology / Disaster Response', description:'A persistent operational memory for emergency response teams, connecting affected people, needs, resources, responders and local constraints.', stack:'React · TypeScript · AI workflows', repo:'https://github.com/Sanjeevakumarnani/CrisisOps', visual:'crisis' },
-  { n:'03', name:'MediKiosk+', category:'Health Technology / Patient Intake', description:'A patient-facing clinical intake kiosk with token generation, estimated consultation time, doctor console and OPD queue prioritisation.', stack:'React · PostgreSQL · Prisma · Groq API', repo:'https://github.com/Sanjeevakumarnani', visual:'medi' },
-  { n:'04', name:'SocioSports', category:'Community / Sports Platform', description:'A community-first sports platform designed to make discovering activities and participating in local sport easier.', stack:'React · TypeScript · Tailwind CSS · GSAP', repo:'https://github.com/Sanjeevakumarnani', visual:'socio' },
-  { n:'05', name:'CampusWave', category:'Campus Technology / Android', description:'A campus radio and student experience platform connecting a Flask and MySQL backend with an Android app built using Kotlin and Jetpack Compose.', stack:'Flask · Python · MySQL · Kotlin', repo:'https://github.com/Sanjeevakumarnani', visual:'campus' },
-  { n:'06', name:'LinkShield', category:'Cybersecurity / Anti-phishing', description:'An anti-phishing concept to help people identify suspicious links and reduce exposure to online fraud. Shortlisted in the Top 10 from more than 4,000 ideas at HiDeathon 2025.', stack:'React Native · Capacitor · Supabase · FastAPI', repo:'https://github.com/Sanjeevakumarnani', visual:'link' },
+const projects=[
+ {name:'OmniRep',service:'Web Development',eyebrow:'WEB3 · DIGITAL IDENTITY',subtitle:'Omnichain Reputation Passport',desc:'Converts activity from multiple testnet wallets into a transparent, explainable and portable on-chain reputation passport.',stack:'React · TypeScript · Ethereum Sepolia · Base Sepolia',repo:'https://github.com/Sanjeevakumarnani/OmniRep-PS64-INNOBLOCK',live:'https://omni-rep-ps-64-innoblock-ly8xronci-sanjeevakumarnanis-projects.vercel.app/',tone:'omni'},
+ {name:'CrisisOps',service:'Web Development',eyebrow:'CIVIC TECH · DISASTER RESPONSE',subtitle:'Disaster Response Memory Engine',desc:'A persistent operational memory for emergency response, connecting affected people, needs, resources, responders and local constraints.',stack:'React · TypeScript · AI workflows',repo:'https://github.com/Sanjeevakumarnani/CrisisOps',tone:'crisis'},
+ {name:'MediKiosk+',service:'Web Development',eyebrow:'PRODUCT DESIGN · HEALTH TECH',subtitle:'Patient-held clinical intake kiosk',desc:'Patient intake, token generation, estimated consultation time, doctor console and OPD queue prioritisation in one connected workflow.',stack:'React · PostgreSQL · Prisma · Groq API',repo:'https://github.com/Sanjeevakumarnani',tone:'medi'},
+ {name:'SocioSports',service:'Web Development',eyebrow:'WEB APP · COMMUNITY',subtitle:'Sports community platform',desc:'A community-first sports platform concept designed to make discovering activities and participating in local sport easier.',stack:'React · TypeScript · Tailwind CSS · GSAP',repo:'https://github.com/Sanjeevakumarnani',tone:'socio'},
+ {name:'CampusWave',service:'App Development',eyebrow:'ANDROID · CAMPUS TECHNOLOGY',subtitle:'Campus radio and student platform',desc:'A full-stack campus radio experience with a Flask and MySQL backend and a native Android application.',stack:'Flask · Python · MySQL · Kotlin · Jetpack Compose',repo:'https://github.com/Sanjeevakumarnani',tone:'campus'},
+ {name:'LinkShield',service:'App Development',eyebrow:'CYBERSECURITY · HIDEATHON 2025',subtitle:'Anti-phishing safety concept',desc:'A link-safety product concept shortlisted in the Top 10 from more than 4,000 ideas at HiDeathon 2025.',stack:'React Native · Capacitor · Supabase · FastAPI',repo:'https://github.com/Sanjeevakumarnani',tone:'link'},
 ];
-
-const milestones = [
-  { date:'OCT 2026 — NOW', title:'Independent developer', place:'Personal projects · Hackathons', desc:['Building web, apps, interfaces and brand experiences, carried from the first sketch to launch.','Working directly with clients, collaborators and student teams.'] },
-  { date:'JUL 2026 — NOW', title:'B.Tech · Computer Science & Engineering', place:'Geethanjali College of Engineering and Technology · Hyderabad', desc:['Joined through TG ECET lateral entry.','Developing practical software products while continuing computer science engineering.'] },
-  { date:'2025', title:'LinkShield · HiDeathon', place:'AntiPhishers Crew', desc:['Shortlisted in the Top 10 from more than 4,000 ideas.','Explored accessible link-risk awareness and safer browsing.'] },
-  { date:'2023 — 2026', title:'Diploma · Computer Science & Engineering', place:'Brilliant Group of Technical Institutes · Hyderabad', desc:['Built foundations in programming, databases, networks and software development.'] },
-  { date:'2021', title:'COPA · Computer Operator and Programming Assistant', place:'Industrial Training Institute · Kalwakurthy', desc:['Developed practical foundations in computer operations and programming.'] },
+const timeline=[
+ {date:'OCT 2026 — NOW',year:'2026',title:'Independent developer',org:'Personal projects · Hackathons',bullets:['Building web, app and AI-powered products from idea to deployment.','Working across product engineering, interface design and technical storytelling.']},
+ {date:'JUL 2026 — NOW',year:'2026',title:'B.Tech · Computer Science & Engineering',org:'Geethanjali College of Engineering and Technology · Hyderabad',bullets:['Joined through TG ECET lateral entry.','Continuing computer science engineering alongside practical product development.']},
+ {date:'2025',year:'2025',title:'LinkShield · HiDeathon',org:'AntiPhishers Crew',bullets:['Shortlisted in the Top 10 from more than 4,000 ideas.','Developed an anti-phishing concept focused on safer link awareness.']},
+ {date:'2023 — 2026',year:'2023',title:'Diploma · Computer Science & Engineering',org:'Brilliant Group of Technical Institutes · Hyderabad',bullets:['Studied programming, databases, networking and software development.']},
+ {date:'2021',year:'2021',title:'COPA · Computer Operator and Programming Assistant',org:'Industrial Training Institute · Kalwakurthy',bullets:['Built foundational skills in computer operations and programming.']},
 ];
-
-function Door({ door, active, onClick }:{door:typeof doors[number],active:boolean,onClick:()=>void}) {
-  return <button className={`door-card ${door.color} ${active?'selected':''}`} onClick={onClick}>
-    <span className="door-number">0{doors.indexOf(door)+1}</span>
-    <span className="door"><span className="door-plaque">{door.title.split(' ')[0]}<br/>DEVELOPER</span><span className="door-knob"/></span>
-    <span className="door-caption">{door.title}<ArrowUpRight size={15}/></span>
-  </button>;
+const skills=[['Web Development','90'],['App Development','82'],['UI/UX Design','85'],['AI & Product Engineering','88']];
+function Door({service,onClick,opening}:{service:typeof services[number],onClick:()=>void,opening:boolean}){
+ return <button className={`door-card ${service.color} ${opening?'opening':''}`} onClick={onClick} aria-label={`Open ${service.name} projects`}><span className="door-arch"><span className="door-grooves"/><span className="door-plaque"><b>{service.name.split(' ')[0].toUpperCase()}</b><small>{service.name.includes('UI')?'DESIGNER':service.name.includes('Graphic')?'DESIGNER':'DEVELOPER'}</small></span><span className="door-handle"/></span></button>;
 }
-
-export default function App() {
-  const [time,setTime] = useState('--:--');
-  const [role,setRole] = useState(0);
-  const [menu,setMenu] = useState(false);
-  const [ability,setAbility] = useState(false);
-  const [door,setDoor] = useState(0);
-  const [doorDetail,setDoorDetail] = useState(false);
-  const [activeProject,setActiveProject] = useState<number|null>(null);
-
-  useEffect(()=>{ const tick=()=>setTime(new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date())); tick(); const t=window.setInterval(tick,30000); return ()=>window.clearInterval(t); },[]);
-  useEffect(()=>{ const t=window.setInterval(()=>setRole(v=>(v+1)%roles.length),2600); return ()=>window.clearInterval(t); },[]);
-  useEffect(()=>{ document.body.style.overflow=(menu||ability||activeProject!==null)?'hidden':''; return ()=>{document.body.style.overflow='';}; },[menu,ability,activeProject]);
-
-  const scrollTo=(id:string)=>{setMenu(false);document.getElementById(id)?.scrollIntoView({behavior:'smooth'});};
-  const selected=doors[door];
-
-  return <main className="portfolio">
-    <header className="topbar">
-      <button className="menu-trigger" onClick={()=>setMenu(true)} aria-label="Open menu"><Menu size={17}/></button>
-      <a className="tiny-brand" href="#home">SSK<span>.</span></a>
-      <div className="local-time">Local time&nbsp; <b>{time}</b></div>
-      <div className="hanging-bulb"><span/></div>
-    </header>
-
-    <section className="hero" id="home">
-      <p className="hero-kicker"><i/> Independent Freelancer</p>
-      <h1>Hi, I'm Sanjeeva.<br/><span>I am a</span></h1>
-      <div className="role-notebook"><div className="spiral">{Array.from({length:14},(_,i)=><i key={i}/>)}</div><strong key={role}>{roles[role]}</strong></div>
-      <div className="hero-buttons"><a href="#contact" className="pill-button dark">Start a project <span>↗</span></a><a href="#work" className="pill-button">See my work</a></div>
-      <div className="hero-portrait"><img src="/images/portrait-normal.jpg" alt="Sanjeeva Kumar"/></div>
-      <button className="ability-tab" onClick={()=>setAbility(true)}>My ability card</button>
-      <div className="hero-bottom-note"><span>AVAILABLE FOR WORK</span><button onClick={()=>scrollTo('skills')}>SCROLL TO EXPLORE ↓</button></div>
-    </section>
-
-    <section className="doors-section" id="skills">
-      {!doorDetail ? <>
-        <h2>Magic happens<br/>behind the doors</h2>
-        <div className="doors-heading"><div><b>{selected.title}</b><small>{selected.sub}</small></div><div className="door-dots">{doors.map((d,i)=><button key={d.id} className={door===i?'on':''} onClick={()=>setDoor(i)} aria-label={d.title}/>)}</div></div>
-        <div className="doors-stage"><button className="door-arrow prev" onClick={()=>setDoor((door+doors.length-1)%doors.length)} aria-label="Previous"><ArrowLeft size={17}/></button><Door door={selected} active onClick={()=>setDoorDetail(true)}/><button className="door-arrow next" onClick={()=>setDoor((door+1)%doors.length)} aria-label="Next"><ArrowRight size={17}/></button></div>
-        <p className="door-hint">SELECT A DOOR TO EXPLORE</p>
-      </> : <div className="door-detail-page"><div className="detail-nav"><button onClick={()=>setDoorDetail(false)}><ArrowLeft size={15}/> Back to the doors</button><button onClick={()=>setMenu(true)}>☰ Menu</button></div><p className="eyebrow">WHAT I DO / 0{door+1}</p><h2>{selected.title}</h2><p className="detail-description">{selected.desc}</p><div className="detail-tags">{selected.tags.map(t=><span key={t}>{t}</span>)}</div><h3>Selected work</h3><p>{selected.work}</p><button className="pill-button dark" onClick={()=>scrollTo('work')}>View my work <ArrowUpRight size={14}/></button></div>}
-    </section>
-
-    <section className="work-section" id="work">
-      <p className="eyebrow">SELECTED WORK / 06 PROJECTS</p><h2>Things I've<br/><span>worked on.</span></h2>
-      <p className="section-lead">A selection of products, experiments and ideas built around real problems.</p>
-      <div className="project-list">{projects.map((p,i)=><article className="project-card" key={p.n}>
-        <button className={`project-visual ${p.visual}`} onClick={()=>setActiveProject(i)} aria-label={`View ${p.name}`}>
-          <span className="browser-bar"><i/><i/><i/><small>{p.name.toLowerCase()}.app</small></span>
-          <span className="mock-screen"><b>{p.name}</b><small>{p.category}</small><span className="mock-lines"/><span className="mock-action">Explore ↗</span></span>
-        </button>
-        <div className="project-meta"><span>{p.n} / {p.category}</span><button onClick={()=>setActiveProject(i)}><ArrowUpRight size={17}/></button></div>
-        <h3>{p.name}</h3><p>{p.description}</p><div className="project-stack">{p.stack}</div>
-        <a className="text-link" href={p.repo} target="_blank" rel="noreferrer">View project <ExternalLink size={13}/></a>
-      </article>)}</div>
-      <a className="github-link" href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer"><Github size={16}/> More projects on GitHub <ArrowUpRight size={15}/></a>
-    </section>
-
-    <section className="story-section" id="story">
-      <p className="eyebrow">MY STORY / THE JOURNEY SO FAR</p><h2>Let's go back in time.<br/><strong>2026</strong></h2><div className="timeline-count">JAN 2021 — NOW <span>01 / 05</span></div>
-      <div className="timeline">{milestones.map((m)=><article className="timeline-item" key={m.title}><div className="timeline-dot"/><div className="timeline-date">{m.date}</div><h3>{m.title}</h3><p className="timeline-place">{m.place}</p><ul>{m.desc.map(d=><li key={d}>{d}</li>)}</ul></article>)}</div>
-    </section>
-
-    <section className="contact-section" id="contact"><p className="eyebrow"><i/> AVAILABLE FOR NEW WORK</p><h2>Got a project?<br/><span>Let's build it<br/>together.</span></h2><p>I'm taking on new freelance work — websites, apps, interfaces and visual content. Tell me what you're building and I'll get back to you within a day.</p><a className="pill-button light" href="mailto:ssksanjeevakumar198@gmail.com?subject=Project%20Enquiry">Start a project <span>↗</span></a><div className="footer-links"><div><b>WORK</b><a href="#work">Web Development</a><a href="#work">App Development</a><a href="#work">UI/UX Design</a></div><div><b>NAVIGATE</b><button onClick={()=>scrollTo('home')}>Home</button><button onClick={()=>scrollTo('story')}>My story</button><button onClick={()=>scrollTo('contact')}>Contact</button></div><div><b>CONNECT</b><a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer">LinkedIn</a><a href="mailto:ssksanjeevakumar198@gmail.com">Email</a></div></div><div className="copyright">© 2026 SUGURU SANJEEVA KUMAR <span>MADE IN HYDERABAD, INDIA</span></div></section>
-
-    <button className="back-top" onClick={()=>scrollTo('home')} aria-label="Back to top"><ChevronUp size={19}/></button>
-
-    {menu&&<div className="menu-overlay"><div className="menu-head"><span>✦ &nbsp; SSK</span><button onClick={()=>setMenu(false)}><X size={17}/> CLOSE</button></div><nav>{['Home','Web Development','App Development','UI/UX Design','Graphic Design','My story','Contact'].map((v,i)=><button key={v} onClick={()=>scrollTo(i===0?'home':i===5?'story':i===6?'contact': 'skills')}><small>0{i+1}</small>{v}</button>)}</nav><div className="menu-foot">LOCAL TIME — {time}<br/>START A PROJECT — <a href="mailto:ssksanjeevakumar198@gmail.com">EMAIL</a></div></div>}
-
-    {ability&&<div className="ability-overlay"><button className="overlay-close" onClick={()=>setAbility(false)}><X size={15}/> CLOSE</button><p className="card-overline">SSK / PERSONAL ABILITY CARD</p><div className="ability-card"><div className="card-ornament">✦ &nbsp; ✦ &nbsp; ✦</div><div className="card-title">SUGURU<br/>SANJEEVA KUMAR</div><div className="card-subtitle">BUILDER · DEVELOPER · CREATOR</div><div className="card-avatar"><img src="/images/portrait-normal.jpg" alt="Sanjeeva"/></div><div className="card-stats">{[['Web Development','92'],['App Development','85'],['UI/UX Design','88'],['AI & Product','90']].map(([k,v])=><div key={k}><span>{k}</span><b>{v}</b><i><em style={{width:v+'%'}}/></i></div>)}</div><div className="card-footer">HYDERABAD, INDIA <span>SSK · 2026</span></div></div></div>}
-
-    {activeProject!==null&&<div className="project-overlay" onClick={()=>setActiveProject(null)}><button className="overlay-close" onClick={()=>setActiveProject(null)}><X size={15}/> CLOSE</button><article className="project-modal" onClick={e=>e.stopPropagation()}><p className="eyebrow">PROJECT / {projects[activeProject].n}</p><h2>{projects[activeProject].name}</h2><p>{projects[activeProject].description}</p><small>{projects[activeProject].stack}</small><div><a href={projects[activeProject].repo} target="_blank" rel="noreferrer">View source <ArrowUpRight size={14}/></a>{projects[activeProject].live&&<a href={projects[activeProject].live} target="_blank" rel="noreferrer">Live project <ArrowUpRight size={14}/></a>}</div></article></div>}
-  </main>;
+export default function App(){
+ const [clock,setClock]=useState(''); const [role,setRole]=useState(0); const [dark,setDark]=useState(false); const [loader,setLoader]=useState(true); const [progress,setProgress]=useState(0);
+ const [menu,setMenu]=useState(false); const [ability,setAbility]=useState(false); const [door,setDoor]=useState(0); const [projectView,setProjectView]=useState(false); const [opening,setOpening]=useState(false); const [cardTilt,setCardTilt]=useState({x:0,y:0}); const [scroll,setScroll]=useState(0); const [activeStory,setActiveStory]=useState(0);
+ const activeService=services[door];
+ const serviceProjects=useMemo(()=>projects.filter(p=>p.service===activeService.name || (door===2 && ['MediKiosk+','OmniRep','CrisisOps'].includes(p.name)) || (door===3 && false)),[door,activeService]);
+ useEffect(()=>{const t=window.setInterval(()=>setClock(new Intl.DateTimeFormat('en-IN',{hour:'numeric',minute:'2-digit',hour12:true}).format(new Date()).toLowerCase()),1000);return()=>clearInterval(t)},[]);
+ useEffect(()=>{const t=window.setInterval(()=>setRole(v=>(v+1)%roles.length),3200);return()=>clearInterval(t)},[]);
+ useEffect(()=>{if(!loader)return;let n=0;const t=window.setInterval(()=>{n=Math.min(100,n+4);setProgress(n);if(n===100){window.clearInterval(t);window.setTimeout(()=>setLoader(false),650)}},45);return()=>window.clearInterval(t)},[loader]);
+ useEffect(()=>{const onScroll=()=>{const max=document.documentElement.scrollHeight-window.innerHeight;setScroll(max>0?window.scrollY/max:0);const story=document.getElementById('my-story');if(story){const h=story.querySelectorAll('.story-entry');let idx=0;h.forEach((el,i)=>{if(el.getBoundingClientRect().top<window.innerHeight*.62)idx=i});setActiveStory(idx)}const y=window.scrollY;const path=y<window.innerHeight*.7?'/home':y<document.getElementById('my-story')!.offsetTop?'/work':'/my-story';if(location.pathname!==path)history.replaceState({},'',path)};window.addEventListener('scroll',onScroll,{passive:true});onScroll();return()=>window.removeEventListener('scroll',onScroll)},[]);
+ useEffect(()=>{document.body.style.overflow=menu||ability?'hidden':'';return()=>{document.body.style.overflow=''}},[menu,ability]);
+ const go=(id:string)=>{setMenu(false);document.getElementById(id)?.scrollIntoView({behavior:'smooth'})};
+ const openDoor=()=>{setOpening(true);window.setTimeout(()=>{setProjectView(true);setOpening(false);document.getElementById('work')?.scrollIntoView({behavior:'smooth'})},850)};
+ const closeProjects=()=>{setProjectView(false);document.getElementById('doors')?.scrollIntoView({behavior:'smooth'})};
+ const tilt=(e:React.PointerEvent<HTMLDivElement>)=>{const r=e.currentTarget.getBoundingClientRect();setCardTilt({x:((e.clientY-r.top)/r.height-.5)*-20,y:((e.clientX-r.left)/r.width-.5)*22})};
+ return <main className={`portfolio ${dark?'dark-theme':''}`}>
+ {loader&&<div className="preloader"><div className="loader-brand"><b>Sanjeeva Kumar</b><span> · Portfolio</span></div><div className="loader-stack">{[['Sanjeeva Kumar','chip-name'],['Web development','chip-web'],['App development','chip-app'],['UI/UX design','chip-ui'],['Graphic design','chip-graphic'],['AI development','chip-ai']].map(([v,c],i)=><div key={v} className={`loader-chip ${c}`} style={{'--i':i} as React.CSSProperties}>{v}</div>)}</div><div className="loader-bottom"><div><small>OPENING UP THE WORK</small><strong>{String(progress).padStart(3,'0')}</strong></div><div className="loader-track"><i style={{width:progress+'%'}}/></div></div></div>}
+ <header className="topbar"><button className="menu-trigger" onClick={()=>setMenu(true)} aria-label="Open menu"><Menu size={21}/></button><div className="local-time"><span>Local time</span><b>{clock||'--:--'}</b></div><button className={`lamp-toggle ${dark?'pulled':''}`} onClick={()=>setDark(v=>!v)} aria-label="Toggle light and dark theme"><span className="lamp-cord"/><span className="lamp-bulb">{dark?<Moon size={11}/>:<Sun size={11}/>}</span></button></header>
+ <section className="hero" id="home"><div className="hero-copy"><p className="hero-kicker"><i/> Independent Freelancer</p><h1>Hi, I'm<br/>Sanjeeva.</h1><p className="iam">I am a</p><div className="role-notebook"><div className="spiral">{Array.from({length:13},(_,i)=><i key={i}/>)}</div><strong key={role}>{roles[role]}</strong><small>0{role+1} / 0{roles.length}</small><div className="paper-edges"/></div><div className="hero-buttons"><a className="pill-button dark" href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">Start a project <span>→</span></a><button className="pill-button ghost" onClick={()=>go('doors')}>See my work</button></div></div><div className="hero-portrait"><img src="/images/portrait-normal.jpg" alt="Portrait of Sanjeeva Kumar"/><button className="ability-tab" onClick={()=>setAbility(true)}>My ability card <ArrowUpRight size={15}/></button></div><div className="hero-bottom-note"><span>AVAILABLE FOR WORK</span><button onClick={()=>go('doors')}>SCROLL TO EXPLORE ↓</button></div></section>
+ <section className="doors-section" id="doors"><div className="section-inner"><h2>Magic happens<br/>behind the doors</h2><div className="service-heading"><div><h3>{activeService.name}</h3><small>{activeService.tag}</small></div><div className="door-dots">{services.map((s,i)=><button key={s.id} className={door===i?'on':''} onClick={()=>setDoor(i)} aria-label={s.name}/>)}</div></div><div className="door-stage"><button className="door-arrow left" onClick={()=>setDoor((door+services.length-1)%services.length)} aria-label="Previous service"><ArrowLeft/></button><Door service={activeService} onClick={openDoor} opening={opening}/><button className="door-arrow right" onClick={()=>setDoor((door+1)%services.length)} aria-label="Next service"><ArrowRight/></button></div><p className="door-instruction">TAP THE DOOR TO EXPLORE THE WORK</p></div></section>
+ <section className={`work-section ${projectView?'visible':''}`} id="work"><div className="work-header"><button className="back-door" onClick={closeProjects}><ArrowLeft size={15}/> Back to the doors</button><button className="back-door" onClick={()=>setMenu(true)}><Menu size={15}/> Menu</button></div><div className="work-content"><p className="eyebrow">SELECTED PROJECTS / {activeService.name.toUpperCase()}</p><h2>{activeService.name}</h2><p className="work-intro">{activeService.desc}</p><div className="project-deck">{serviceProjects.map((p,i)=><article className="project-card" key={p.name} style={{'--index':i} as React.CSSProperties}><div className={`project-monitor ${p.tone}`}><div className="monitor-screen"><div className="monitor-top"><i/><i/><i/><span>{p.name.toLowerCase()}.app</span></div><div className="monitor-content"><small>{p.eyebrow}</small><b>{p.name}</b><span>{p.subtitle}</span><div className="monitor-lines"/></div></div><div className="monitor-stand"/></div><div className="project-info"><small className="eyebrow">{p.eyebrow}</small><h3>{p.name}</h3><h4>{p.subtitle}</h4><p>{p.desc}</p><div className="project-stack">{p.stack}</div><div className="project-actions"><a href={p.repo} target="_blank" rel="noreferrer">View source <ArrowUpRight size={14}/></a>{p.live&&<a className="visit-link" href={p.live} target="_blank" rel="noreferrer">Visit live site <ArrowUpRight size={14}/></a>}</div></div></article>)}</div></div></section>
+ <section className="story-section" id="my-story"><div className="story-sticky"><p>Let's go back in time.</p><strong>{timeline[activeStory]?.year||'2026'}</strong><div className="story-progress"><span>{String(activeStory+1).padStart(2,'0')} <i>/ 05</i></span><div><b style={{width:((activeStory+1)/timeline.length*100)+'%'}}/></div></div><small>{timeline[activeStory]?.date}</small></div><div className="story-list">{timeline.map((m,i)=><article className={`story-entry ${activeStory===i?'active':''}`} key={m.title}><div className="story-node"/><small>{m.date}</small><h3>{m.title}</h3><h4>{m.org}</h4><ul>{m.bullets.map(b=><li key={b}>{b}</li>)}</ul></article>)}</div></section>
+ <footer className="contact-section" id="contact"><div className="contact-main"><p className="eyebrow"><i/> AVAILABLE FOR NEW WORK</p><h2>Got a project?<br/><span>Let's build it<br/>together.</span></h2><p>I'm open to building websites, apps, interfaces and practical AI products. Explore my work or connect with me through GitHub.</p><a className="pill-button light" href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">Start a project <span>→</span></a><button className="pill-button footer-ghost" onClick={()=>go('doors')}>See my work</button></div><div className="footer-links"><div><b>WORK</b>{services.map(s=><button key={s.id} onClick={()=>{setDoor(services.indexOf(s));setProjectView(false);go('doors')}}>{s.name}</button>)}<span>AI & Product Engineering</span></div><div><b>NAVIGATE</b><button onClick={()=>go('home')}>Home</button><button onClick={()=>go('my-story')}>My story</button><button onClick={()=>go('contact')}>Contact</button></div><div><b>CONNECT</b><a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={12}/></a><span>Hyderabad, India</span><span>Remote-first</span></div></div><div className="copyright">© 2026 SUGURU SANJEEVA KUMAR <span>MADE IN HYDERABAD, INDIA</span></div></footer>
+ <button className="back-top" onClick={()=>go('home')} aria-label="Scroll to top"><span className="progress-ring" style={{background:`conic-gradient(currentColor ${scroll*360}deg, transparent 0)`}}/><ArrowUp size={18}/></button>
+ {menu&&<div className="menu-overlay"><div className="menu-head"><span>✦ &nbsp; Sanjeeva</span><button onClick={()=>setMenu(false)}><X size={16}/> CLOSE</button></div><nav>{['Home','Web Development','App Development','UI/UX Design','Graphic Design','My story','Contact'].map((v,i)=><button key={v} onClick={()=>{if(i>0&&i<5){setDoor(i-1);setProjectView(false)}go(i===0?'home':i===5?'my-story':i===6?'contact':'doors')}}><small>0{i+1}</small>{v}</button>)}</nav><div className="menu-foot">LOCAL TIME — {clock.toUpperCase()}<br/><a href="https://github.com/Sanjeevakumarnani">START A PROJECT ↗</a></div></div>}
+ {ability&&<div className="ability-overlay"><button className="overlay-close" onClick={()=>setAbility(false)}><X size={15}/> CLOSE</button><div className="ability-kicker">SUGURU SANJEEVA KUMAR <span>ABILITY CARD</span></div><div className="ability-card-wrap" onPointerMove={tilt} onPointerLeave={()=>setCardTilt({x:0,y:0})}><div className="ability-card" style={{transform:`perspective(1000px) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`}}><div className="gold-frame"><div className="card-ribbon">SUGURU SANJEEVA KUMAR</div><div className="card-art"><img src="/images/portrait-normal.jpg" alt="Sanjeeva Kumar"/><div className="holo-glare"/></div><div className="card-stats">{skills.map(([k,v])=><div key={k}><span>{k}</span><b>{v}</b><i><em style={{width:v+'%'}}/></i></div>)}</div><div className="card-foot"><span><small>LOCATION</small>INDIA</span><span><small>WORKS</small>REMOTELY</span><span><small>REPLY</small>SOON</span></div></div></div></div><p className="card-hint">MOVE POINTER OR DRAG TO TILT</p></div>}
+ </main>;
 }
