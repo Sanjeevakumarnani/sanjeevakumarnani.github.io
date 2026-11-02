@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, BrainCircuit, Check,
-  ChevronDown, Code2, Cpu, Database, ExternalLink, Github, Globe2,
-  Linkedin, Mail, Menu, Monitor, Smartphone, Sparkles, X, ShieldCheck,
+  Code2, Cpu, Database, Github, Linkedin, Mail, Menu, Monitor, Smartphone, X, ShieldCheck,
 } from 'lucide-react';
 import './App.css';
 
