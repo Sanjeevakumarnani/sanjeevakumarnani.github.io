@@ -275,14 +275,6 @@ export default function App() {
     doorTrack.current?.scrollBy({ left: direction * 350, behavior: 'smooth' });
   };
 
-  const selectDoor = (index: number) => {
-    setActiveDoor(index);
-    if (doorTrack.current) {
-      const card = doorTrack.current.children[index] as HTMLElement | undefined;
-      card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
-  };
-
   const submitInquiry = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
