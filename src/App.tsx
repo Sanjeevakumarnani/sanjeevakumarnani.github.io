@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ChevronUp, X, Menu, Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronUp, X, Menu, Github, ExternalLink } from 'lucide-react';
 import './App.css';
 
 const roles = ['App Developer', 'Web Developer', 'AI Developer', 'UI/UX Designer', 'Product Builder'];
