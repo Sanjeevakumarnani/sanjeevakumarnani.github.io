@@ -83,7 +83,7 @@ export default function App() {
     <section className="work-section" id="work">
       <p className="eyebrow">SELECTED WORK / 06 PROJECTS</p><h2>Things I've<br/><span>worked on.</span></h2>
       <p className="section-lead">A selection of products, experiments and ideas built around real problems.</p>
-      <div className="project-list">{projects.map((p)=><article className="project-card" key={p.n}>
+      <div className="project-list">{projects.map((p,i)=><article className="project-card" key={p.n}>
         <button className={`project-visual ${p.visual}`} onClick={()=>setActiveProject(i)} aria-label={`View ${p.name}`}>
           <span className="browser-bar"><i/><i/><i/><small>{p.name.toLowerCase()}.app</small></span>
           <span className="mock-screen"><b>{p.name}</b><small>{p.category}</small><span className="mock-lines"/><span className="mock-action">Explore ↗</span></span>
@@ -97,7 +97,7 @@ export default function App() {
 
     <section className="story-section" id="story">
       <p className="eyebrow">MY STORY / THE JOURNEY SO FAR</p><h2>Let's go back in time.<br/><strong>2026</strong></h2><div className="timeline-count">JAN 2021 — NOW <span>01 / 05</span></div>
-      <div className="timeline">{milestones.map((m,i)=><article className="timeline-item" key={m.title}><div className="timeline-dot"/><div className="timeline-date">{m.date}</div><h3>{m.title}</h3><p className="timeline-place">{m.place}</p><ul>{m.desc.map(d=><li key={d}>{d}</li>)}</ul></article>)}</div>
+      <div className="timeline">{milestones.map((m)=><article className="timeline-item" key={m.title}><div className="timeline-dot"/><div className="timeline-date">{m.date}</div><h3>{m.title}</h3><p className="timeline-place">{m.place}</p><ul>{m.desc.map(d=><li key={d}>{d}</li>)}</ul></article>)}</div>
     </section>
 
     <section className="contact-section" id="contact"><p className="eyebrow"><i/> AVAILABLE FOR NEW WORK</p><h2>Got a project?<br/><span>Let's build it<br/>together.</span></h2><p>I'm taking on new freelance work — websites, apps, interfaces and visual content. Tell me what you're building and I'll get back to you within a day.</p><a className="pill-button light" href="mailto:ssksanjeevakumar198@gmail.com?subject=Project%20Enquiry">Start a project <span>↗</span></a><div className="footer-links"><div><b>WORK</b><a href="#work">Web Development</a><a href="#work">App Development</a><a href="#work">UI/UX Design</a></div><div><b>NAVIGATE</b><button onClick={()=>scrollTo('home')}>Home</button><button onClick={()=>scrollTo('story')}>My story</button><button onClick={()=>scrollTo('contact')}>Contact</button></div><div><b>CONNECT</b><a href="https://github.com/Sanjeevakumarnani" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com/in/sanjeevakumarnani/" target="_blank" rel="noreferrer">LinkedIn</a><a href="mailto:ssksanjeevakumar198@gmail.com">Email</a></div></div><div className="copyright">© 2026 SUGURU SANJEEVA KUMAR <span>MADE IN HYDERABAD, INDIA</span></div></section>
