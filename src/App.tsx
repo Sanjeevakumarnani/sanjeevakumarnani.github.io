@@ -83,7 +83,7 @@ export default function App() {
     <section className="work-section" id="work">
       <p className="eyebrow">SELECTED WORK / 06 PROJECTS</p><h2>Things I've<br/><span>worked on.</span></h2>
       <p className="section-lead">A selection of products, experiments and ideas built around real problems.</p>
-      <div className="project-list">{projects.map((p,i)=><article className="project-card" key={p.n}>
+      <div className="project-list">{projects.map((p)=><article className="project-card" key={p.n}>
         <button className={`project-visual ${p.visual}`} onClick={()=>setActiveProject(i)} aria-label={`View ${p.name}`}>
           <span className="browser-bar"><i/><i/><i/><small>{p.name.toLowerCase()}.app</small></span>
           <span className="mock-screen"><b>{p.name}</b><small>{p.category}</small><span className="mock-lines"/><span className="mock-action">Explore ↗</span></span>
